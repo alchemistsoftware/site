@@ -1,0 +1,186 @@
+<h1>Protex changelog</h1>
+
+<div class="changelog-entry">
+    <h2>[0.4.1-alpha] - 02-16-23</h2>
+    <h3>Added</h3>
+    <ul>
+        <li>Toolbar and actions changing what is displayed to the user ( example: target specific extractor to work on ).</li>
+    </ul>
+</div>
+
+<div class="changelog-entry">
+    <h2>[0.4.0-alpha] - 02-14-23</h2>
+    <h3>Added</h3>
+    <ul>
+        <li>a Fox</li>
+        <li>Extract/Tag conditions can now specify specific patterns.</li>
+        <li>Script editing.</li>
+        <li>Dedicated pattern editing area.</li>
+    </ul>
+    <h3>Fixed</h3>
+    <ul>
+        <li>Text tabs/new-lines are now properly displayed.</li>
+        <li>Out of bounds index when using UNTIL OFFSET within a conditional statement.</li>
+        <li>App writing artifacts to wrong dir.</li>
+    </ul>
+    <h3>Removed</h3>
+    <ul>
+        <li>Generate config button and text that would appear because configurations are now written by main thread instead of a web server.</li>
+    </ul>
+    <h3>Changed</h3>
+    <ul>
+        <li>Text scrollbars are now hidden</li>
+        <li>Project name is now "protex"</li>
+        <li>Extractor now allways resolves with a script.</li>
+    </ul>
+    <h3>Added</h3>
+    <ul>
+        <li>Pressing '~' during conditional statement editing now prompts an auto complete for the pattern
+            to include within the statement.</li>
+    </ul>
+</div>
+
+<div class="changelog-entry">
+    <h2>[0.3.1-alpha] - 02-08-23</h2>
+    <h3>Removed</h3>
+    <ul>
+        <li>Country/Language inputs within config, and refrences within extractor and packager.</li>
+    </ul>
+    <h3>Changed</h3>
+    <ul>
+        <li>Don't let index cache renderer.js</li>
+    </ul>
+    <h3>Fixed</h3>
+    <ul>
+        <li>User provided text is now properly rendering after clicking away.</li>
+    </ul>
+</div>
+
+<div class="changelog-entry">
+    <h2>[0.3.0-alpha] - 02-06-23</h2>
+    <h3>Changed</h3>
+    <ul>
+        <li>Packager now returns an error on failed hs compilation rather than a crash.</li>
+        <li>Web client is now a standalone electron application</li>
+    </ul>
+    <h3>Removed</h3>
+    <ul>
+        <li>Web server</li>
+    </ul>
+</div>
+
+<div class="changelog-entry">
+    <h2>[0.2.0-alpha] - 01-29-23</h2>
+    <h3>Added</h3>
+    <ul>
+        <li>Basic tagging conditions</li>
+        <li>Delete buttons for categories and extractors</li>
+    </ul>
+</div>
+
+<div class="changelog-entry">
+    <h2>[0.1.1-alpha] - 01-23-23</h2>
+    <h3>Added</h3>
+    <ul>
+        <li>.gitignore</li>
+        <li>Regex highlighting for selected patterns</li>
+        <li>Server writes configurations built in the web interface to disk.</li>
+        <li>Server can run packager and create artifacts from a web request.</li>
+        <li>Server can call extractor from a web request.</li>
+    </ul>
+    <h3>Changed</h3>
+    <ul>
+        <li>Extractor's Zig Init API no longer requires null terminated artifact path.</li>
+        <li>Packager exposes artifact creation functionality.</li>
+        <li>Refactoring of python module selector population.</li>
+        <li>When selecting text the pattern input which was last selected (if any) is filled with the user's text selection converted to a basic regex pattern.</li>
+        <li>Set resuse address flag when initializing stream server.</li>
+        <li>Refactor HTTP response creation.</li>
+    </ul>
+
+    <h3>Removed</h3>
+    <ul>
+        <li>Needless async functions</li>
+    </ul>
+</div>
+
+<div class="changelog-entry">
+    <h2>[0.1.0-alpha] - 01-12-23</h2>
+    <h3>Added</h3>
+    <ul>
+        <li>Web client and server</li>
+    </ul>
+    <h3>Fixed</h3>
+    <ul>
+        <li>Throwing away scratch space refrence per database load.</li>
+    </ul>
+</div>
+
+<div class="changelog-entry">
+    <h2>[0.0.5-alpha] - 01-06-23</h2>
+    <h3>Added</h3>
+    <ul>
+        <li>a README</li>
+        <li>Full support for multiple extractor definitions.</li>
+        <li>Json parsing on returned value from python callbacks.</li>
+    </ul>
+    <h3>Changed</h3>
+    <ul>
+        <li>Sempy run now writes to a utf8 encoded byte buffer rather than a wchar buffer.</li>
+    </ul>
+
+    <h3>Fixed</h3>
+    <ul>
+        <li>Extractor Unit test (again)</li>
+        <li>sempy init/deinit crash</li>
+    </ul>
+</div>
+
+<div class="changelog-entry">
+    <h2>[0.0.4-alpha] - 01-04-23</h2>
+    <h3>Fixed</h3>
+    <ul>
+        <li>Extractor Unit test</li>
+        <li>Memory leaks caused by moving off of a backing buffer.</li>
+    </ul>
+
+    <h3>Added</h3>
+    <ul>
+        <li>Loading of arbitrary python modules</li>
+        <li>CatBoxes...</li>
+    </ul>
+    <h3>Changed</h3>
+    <ul>
+        <li>Instances of Text paramaters are now marked as constant.</li>
+        <li>Decoupled python modules from category definition blocks.</li>
+        <li>Sempy now writes main module output to a buffer which is then exposed through extract api.</li>
+    </ul>
+</div>
+
+<div class="changelog-entry">
+    <h2>[0.0.3-alpha] - 12-31-22</h2>
+    <h3>Changed</h3>
+    <ul>
+        <li>Artifact structure, the packager and deserializer now handle new artifact structure</li>
+        <li>Improved error handling</li>
+        <li>Simplified backing allocator logic</li>
+        <li>Slab allocator now stores entire backing buffer slize instead of just it's ptr as an int</li>
+    </ul>
+    </div>
+
+    <div class="changelog-entry">
+    <h2>[0.0.2-alpha] - 12-15-22</h2>
+    <h3>Added</h3>
+    <ul>
+        <li>VERY EARLY embeded python 11 support</li>
+    </ul>
+</div>
+
+<div class="changelog-entry">
+    <h2>[0.0.1-alpha] - 11-25-22</h2>
+    <h3>Added</h3>
+    <ul>
+        <li>Slab alloactor</li>
+        <li>Debug slab visualizer</li>
+    </ul>
+</div>
