@@ -51,10 +51,9 @@ const LocationHandler = async () =>
     }
 
     const Route = RoutesMap.get(Location);
-
-    await fetch(Route.TemplatePath)
-        .then((Response) =>
-              TryGetElementByID("content").innerHTML = Response.text());
+    TryGetElementByID("content").innerHTML =
+        await fetch(Route.TemplatePath)
+            .then((Response) => Response.text());
 
     // Do a specific thing depending on page content
 
@@ -64,7 +63,7 @@ const LocationHandler = async () =>
         {
             TryGetElementByID("changelog").innerHTML =
                 await fetch("/templates/protex_changelog.html")
-                .then((Response) => Response.text());
+                    .then((Response) => Response.text());
         };
         default: break;
     };
