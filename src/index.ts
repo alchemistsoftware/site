@@ -46,20 +46,30 @@ function TryGetElementByID(ElemId: string): HTMLElement
 const LocationHandler = async () =>
 {
     let Location: string = window.location.hash.replace("#", "");
-
     if (Location.length == 0) {
         Location = "/";
     }
 
-    const Route = RoutesMap.get(Location)
+    const Route = RoutesMap.get(Location);
 
-    const HTML = await fetch(Route.TemplatePath)
-        .then((Response) => Response.text());
+    await fetch(Route.TemplatePath)
+        .then((Response) =>
+              TryGetElementByID("content").innerHTML = Response.text());
 
-    TryGetElementByID("content").innerHTML = HTML;
+    // Do a specific thing depending on page content
+
+    switch (Location)
+    {
+        case "protex":
+        {
+            TryGetElementByID("changelog").innerHTML =
+                await fetch("/templates/protex_changelog.html")
+                .then((Response) => Response.text());
+        };
+        default: break;
+    };
 
     document.title = Route.Title;
-
     const DescElem = document.querySelector('meta[name="description"]');
     if (DescElem !== null)
     {
