@@ -22,10 +22,10 @@ RoutesMap.set("contact", {
     Title: "Alchemist: Contact",
     Description: "This is the contact page",
 });
-RoutesMap.set("products", {
-    TemplatePath: "/templates/products.html",
-    Title: "Alchemist: Products",
-    Description: "This is the products page",
+RoutesMap.set("projects", {
+    TemplatePath: "/templates/projects.html",
+    Title: "Alchemist: Projects",
+    Description: "This is the projects page",
 });
 RoutesMap.set("protex", {
     TemplatePath: "/templates/protex.html",
