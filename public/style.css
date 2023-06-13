@@ -23,12 +23,17 @@
     padding: 0;
     margin: 0;
     background-color: black;
+/*    overflow-x: hidden; */
 }
 
 body {
     font-family: "FiraCode-Regular";
     color: white;
     font-size: medium;
+}
+
+li,p {
+    margin-top: 0.5em;
 }
 
 #copyright
@@ -60,9 +65,36 @@ body {
     margin-left: 10%;
     margin-right: 10%;
 }
-.fancy-header{
+
+.fancy-header {
+
+    font-family: "FiraCode-Bold";
     text-align: center;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+
+  /*position: absolute;
+  top: 0;
+  left: 0;*/
+
+  width: 100%;
 }
+
+.bar_content {
+  display: block; /* Important to give the content a width */
+
+  width: 100%;
+  transform: translateX(100%); /* Animation start out of the screen */
+
+  /* Add the animation */
+  animation: move 20s linear infinite /* infinite make reapeat the animation indefinitely */;
+}
+
+/* Create the animation */
+@keyframes move {
+  to { transform: translateX(-100%); }
+}
+
 .navbar{
     text-align: center;
 }

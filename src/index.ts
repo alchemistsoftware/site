@@ -7,7 +7,7 @@ interface route_entry
 
 const RoutesMap = new Map();
 
-RoutesMap.set("/", {
+RoutesMap.set("home", {
     TemplatePath: "/templates/home.html",
     Title: "Alchemist: Home",
     Description: "This is the home page",
@@ -32,6 +32,11 @@ RoutesMap.set("protex", {
     Title: "Alchemist: Protex",
     Description: "This is the protex project page",
 });
+RoutesMap.set("scary-craft", {
+    TemplatePath: "/templates/scary_craft.html",
+    Title: "Alchemist: Scary-Craft",
+    Description: "Scary craft project page",
+});
 
 function TryGetElementByID(ElemId: string): HTMLElement
 {
@@ -47,7 +52,7 @@ const LocationHandler = async () =>
 {
     let Location: string = window.location.hash.replace("#", "");
     if (Location.length == 0) {
-        Location = "/";
+        Location = "home";
     }
 
     const Route = RoutesMap.get(Location);
@@ -55,8 +60,7 @@ const LocationHandler = async () =>
         await fetch(Route.TemplatePath)
             .then((Response) => Response.text());
 
-    // Do a specific thing depending on page content
-
+    // Do a specific thing depending on template
     switch (Location)
     {
         case "protex":
@@ -70,8 +74,7 @@ const LocationHandler = async () =>
 
     document.title = Route.Title;
     const DescElem = document.querySelector('meta[name="description"]');
-    if (DescElem !== null)
-    {
+    if (DescElem !== null) {
         DescElem.setAttribute("content", Route.Description);
     }
 };
