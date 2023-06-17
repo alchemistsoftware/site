@@ -39,6 +39,23 @@ RoutesMap.set("scary-craft", {
 });
 
 let caleb_github_events: Object[] = [];
+async function getGithubEvents(): Promise<Object[]> {
+    if (caleb_github_events.length > 0)
+        return caleb_github_events;
+
+    let promise = new Promise<Object[]>((resolve) => {
+        fetch("https://api.github.com/users/cabarger/events/public")
+            .then((Response) => {
+                Response.text()
+                    .then((response_json) => {
+                        caleb_github_events = JSON.parse(response_json);
+                        resolve(caleb_github_events);
+                    });
+            });
+    });
+
+    return (await promise);
+}
 
 function TryGetElementByID(ElemId: string): HTMLElement
 {
@@ -67,30 +84,24 @@ const LocationHandler = async () =>
     {
         case "home": {
             const activity_element = TryGetElementByID("activity"); 
-            if (caleb_github_events.length == 0) { // Only fetch if events is empty. 
-            caleb_github_events = await fetch(" https://api.github.com/users/cabarger/events/public")
-                .then((Response) => {
-                    Response.text()
-                        .then((response_json) => JSON.parse(response_json);
+            await getGithubEvents().then(events => {
+                events.forEach((event: any) => {
+                    if (event.type == "PushEvent") {
+                        let card = document.createElement("div");
+                        card.className = "card"
+
+                        let push_info = document.createElement("p");
+                        push_info.innerHTML = event.created_at.slice(0, 10) + ": pushed " + event.payload.commits.length + " commits to " + `<a href="https://github.com/${event.repo.name}">${event.repo.name}</a>`;
+                        card.appendChild(push_info);
+                        event.payload.commits.forEach((commit: any) => {
+                            let commit_message = document.createElement("p");
+                            commit_message.innerHTML = commit.message;
+                            card.appendChild(commit_message);
+                        });
+                        activity_element.appendChild(card);
+                    }
                 });
-            }
-            caleb_github_events.forEach((event: any) => {
-                if (event.type == "PushEvent") {
-                    let card = document.createElement("div");
-                    card.className = "card"
-
-                    let push_info = document.createElement("p");
-                    push_info.innerHTML = event.created_at.slice(0, 10) + ": pushed " + event.payload.commits.length + " commits to " + `<a href="https://github.com/${event.repo.name}">${event.repo.name}</a>`;
-                    card.appendChild(push_info);
-                    event.payload.commits.forEach((commit: any) => {
-                        let commit_message = document.createElement("p");
-                        commit_message.innerHTML = commit.message;
-                        card.appendChild(commit_message);
-                    });
-                    activity_element.appendChild(card);
-                }
             });
-
         } break;
         case "protex": {
             TryGetElementByID("changelog").innerHTML =
