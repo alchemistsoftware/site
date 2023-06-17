@@ -1,3 +1,7 @@
+:root {
+    --off_black: #151717;
+}
+ 
 @font-face {
     font-family: "FiraCode-Regular";
     src: url("./assets/fonts/FiraCode-Regular.ttf");
@@ -22,11 +26,10 @@
 *{
     padding: 0;
     margin: 0;
-    background-color: black;
-/*    overflow-x: hidden; */
 }
 
 body {
+    background-color: black;
     font-family: "FiraCode-Regular";
     color: white;
     font-size: medium;
@@ -60,10 +63,24 @@ li,p {
     margin: 1% 0% 0% 0%;
 }
 
+#activity {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .right-left-margin-container{
     background-color: black;
     margin-left: 10%;
     margin-right: 10%;
+}
+
+.card {
+    border: 1px solid white;
+    width: fit-content;
+    background-color: var(--off_black);
+    text-align: center;
+    margin: 0.25em;
 }
 
 .fancy-header {
@@ -72,11 +89,6 @@ li,p {
     text-align: center;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-
-  /*position: absolute;
-  top: 0;
-  left: 0;*/
-
   width: 100%;
 }
 
@@ -109,3 +121,4 @@ img {
     width: 95%;
     margin: 1em 0em 0em 0em;
 }
+
