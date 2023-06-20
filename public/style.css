@@ -84,27 +84,11 @@ li,p {
 }
 
 .fancy-header {
-
     font-family: "FiraCode-Bold";
     text-align: center;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-  width: 100%;
-}
-
-.bar_content {
-  display: block; /* Important to give the content a width */
-
-  width: 100%;
-  transform: translateX(100%); /* Animation start out of the screen */
-
-  /* Add the animation */
-  animation: move 20s linear infinite /* infinite make reapeat the animation indefinitely */;
-}
-
-/* Create the animation */
-@keyframes move {
-  to { transform: translateX(-100%); }
+    width: 100%;
 }
 
 .navbar{
