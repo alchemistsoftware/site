@@ -39,16 +39,15 @@ li,p {
     margin-top: 0.5em;
 }
 
+ul,p,h1 {
+    margin: 1%;
+}
+
 #copyright
 {
     text-align: center;
     font-size: small;
     opacity: 0.5;
-}
-
-#content
-{
-    padding: 1%;
 }
 
 #changelog h1 {
@@ -98,11 +97,16 @@ li,p {
 .bleah {
     margin: 1em 0em 1em 0em;
 }
+
+img {
+    width: 100%;
+}
 a {
     color: white;
 }
-img {
-    width: 95%;
-    margin: 1em 0em 0em 0em;
+
+#hacker-dog-container {
+    margin: 1%;
+    text-align: center;
 }
 

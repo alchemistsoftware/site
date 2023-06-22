@@ -10,23 +10,26 @@ const raw_head_html =
     \\    <link rel="icon" href="./favicon.ico" type="image/x-icon">
     \\    <link rel="stylesheet" href="/style.css">
     \\</head>
+    \\
 ;
 
 const raw_navbar_html =
     \\<div class="right-left-margin-container">
     \\    <h1 class="fancy-header">Alchemist Software</h1>
     \\    <nav class="navbar">
-    \\        <a href="/pages/home.html">Home</a>
+    \\        <a href="/index.html">Home</a>
     \\        <a href="/pages/posts.html">Posts</a>
     \\        <a href="/pages/projects.html">Projects</a>
     \\        <a href="/pages/about.html">About</a>
     \\        <a href="/pages/contact.html">Contact</a>
     \\    </nav>
     \\</div>
+    \\
 ;
 
 const raw_copyright_html =
     \\<p id="copyright">Copyright Alchemist Software LLC 2023</p>
+    \\
 ;
 
 pub fn main() !void {
@@ -34,26 +37,25 @@ pub fn main() !void {
     const arena = arena_instance.allocator();
     defer arena_instance.deinit();
 
-    var templates_d = try std.fs.cwd().openIterableDir("./templates", .{});
+    var templates_d = try std.fs.cwd().openIterableDir("templates", .{});
     defer templates_d.close();
 
-    try std.fs.cwd().makePath("./public/pages");
+    try std.fs.cwd().deleteTree("public/pages");
+    var pages_d = try std.fs.cwd().makeOpenPath("public/pages", .{});
+    defer pages_d.close();
+
     var template_d_walker = try templates_d.walk(arena);
     while (try template_d_walker.next()) |walk_entry| {
         std.debug.print("Writing ./public/posts/{s}...\n", .{walk_entry.path});
 
-        var path_buf: [256]u8 = undefined;
         if (walk_entry.kind == .Directory) {
-            const dir_path = try std.fmt.bufPrint(&path_buf, "./public/pages/{s}", .{walk_entry.path});
-            try std.fs.cwd().makePath(dir_path);
+            try pages_d.makePath(walk_entry.path);
             continue;
         }
 
-        const template_path = try std.fmt.bufPrint(&path_buf, "./templates/{s}", .{walk_entry.path});
-        const template_bytes = try std.fs.cwd().readFileAlloc(arena, template_path, 1024 * 10);
-        const page_path = try std.fmt.bufPrint(&path_buf, "./public/pages/{s}", .{walk_entry.path});
+        const template_bytes = try templates_d.dir.readFileAlloc(arena, walk_entry.path, 1024 * 10);
 
-        const page_f = try std.fs.cwd().createFile(page_path, .{});
+        const page_f = try pages_d.createFile(walk_entry.path, .{});
         defer page_f.close();
         const page_writer = page_f.writer();
 
