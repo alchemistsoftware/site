@@ -1,5 +1,16 @@
 const std = @import("std");
 
+const pages_path = "public/pages";
+const templates_path = "templates";
+const template_buffer_size = 1024 * 8;
+
+const splash =
+    \\==============================
+    \\* Static Site Generator v0.1 *
+    \\==============================
+    \\
+;
+
 const raw_head_html =
     \\<head>
     \\    <meta charset="UTF-8">
@@ -37,23 +48,32 @@ pub fn main() !void {
     const arena = arena_instance.allocator();
     defer arena_instance.deinit();
 
-    var templates_d = try std.fs.cwd().openIterableDir("templates", .{});
+    const stdout_f = std.io.getStdOut().writer();
+    var bw = std.io.bufferedWriter(stdout_f);
+    const stdout = bw.writer();
+
+    try stdout.writeAll(splash);
+
+    var templates_d = try std.fs.cwd().openIterableDir(templates_path, .{});
     defer templates_d.close();
 
-    try std.fs.cwd().deleteTree("public/pages");
-    var pages_d = try std.fs.cwd().makeOpenPath("public/pages", .{});
+    try stdout.print("Nuking {s}...\n", .{pages_path});
+    try std.fs.cwd().deleteTree(pages_path);
+    var pages_d = try std.fs.cwd().makeOpenPath(pages_path, .{});
     defer pages_d.close();
+
+    var template_byte_buffer = try arena.alloc(u8, template_buffer_size);
 
     var template_d_walker = try templates_d.walk(arena);
     while (try template_d_walker.next()) |walk_entry| {
-        std.debug.print("Writing ./public/posts/{s}...\n", .{walk_entry.path});
-
         if (walk_entry.kind == .Directory) {
+            try stdout.print("Making path {s}/{s}...\n", .{ pages_path, walk_entry.path });
             try pages_d.makePath(walk_entry.path);
             continue;
         }
 
-        const template_bytes = try templates_d.dir.readFileAlloc(arena, walk_entry.path, 1024 * 10);
+        try stdout.print("Writing {s}/{s}...\n", .{ pages_path, walk_entry.path });
+        const template_bytes = try templates_d.dir.readFile(walk_entry.path, template_byte_buffer);
 
         const page_f = try pages_d.createFile(walk_entry.path, .{});
         defer page_f.close();
@@ -70,5 +90,6 @@ pub fn main() !void {
         try page_writer.writeAll("</html>\n");
     }
 
+    try bw.flush();
     std.process.cleanExit();
 }
