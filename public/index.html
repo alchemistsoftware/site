@@ -20,9 +20,9 @@
     </nav>
 </div>
 <div id="activity"></div>
-<div id="hacker-dog-container">
-  <img src="/assets/images/hackerdog.gif"/>
-</div>
+<p id="canvas-container">
+    <canvas id="canvas" width="600" height="600"></canvas>
+</p>
 <p id="copyright">Copyright Alchemist Software LLC 2023</p></body>
 </html>
 
@@ -41,24 +41,68 @@ async function getGithubEvents() {
     return promise;
 }
 
-const activity_element = document.getElementById("activity"); 
-getGithubEvents().then(events => {
-  events.forEach((event) => {
-    if (event.type == "PushEvent") {
-      let card = document.createElement("div");
-      card.className = "card"
+// const activity_element = document.getElementById("activity"); 
+// getGithubEvents().then(events => {
+//   events.forEach((event) => {
+//     if (event.type == "PushEvent") {
+//       let card = document.createElement("div");
+//       card.className = "card"
 
-      let push_info = document.createElement("p");
-      push_info.innerHTML = event.created_at.slice(0, 10) + ": pushed " + event.payload.commits.length + " commits to " + `<a href="https://github.com/${event.repo.name}">${event.repo.name}</a>`;
-      card.appendChild(push_info);
-      event.payload.commits.forEach((commit) => {
-        let commit_message = document.createElement("p");
-        commit_message.innerHTML = commit.message;
-        card.appendChild(commit_message);
-      });
-      activity_element.appendChild(card);
+//       let push_info = document.createElement("p");
+//       push_info.innerHTML = event.created_at.slice(0, 10) + ": pushed " + event.payload.commits.length + " commits to " + `<a href="https://github.com/${event.repo.name}">${event.repo.name}</a>`;
+//       card.appendChild(push_info);
+//       event.payload.commits.forEach((commit) => {
+//         let commit_message = document.createElement("p");
+//         commit_message.innerHTML = commit.message;
+//         card.appendChild(commit_message);
+//       });
+//       activity_element.appendChild(card);
+//     }
+//   });
+// });
+
+// NOTE(caleb): Why does this exist? 09/05/23 -- Funner than doing my math homework.
+// Tetris -----------------------------------------------------------------------------------------
+
+const ROWS = 20;
+const COLS = 20;
+const BLOCK_CHAR = "▋";
+
+function draw() {
+    const ctx = document.getElementById("canvas").getContext("2d");
+    ctx.font = "32px mono";
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, 600, 600);
+
+    // Draw board border
+    ctx.fillStyle = "#2e4229"; // Cool old schoolish green
+
+    const block_text_metrics = ctx.measureText(BLOCK_CHAR);
+    const block_height = block_text_metrics.actualBoundingBoxAscent;
+    const block_width = block_text_metrics.width;
+
+    // Draw horizontal border
+    for (let row_index=0; row_index < ROWS + 1; ++row_index)  {
+        ctx.fillText("!<", 0, block_height * (row_index + 1));
+        ctx.fillText(">!", COLS*block_width + block_width * 2, block_height * (row_index + 1));
     }
-  });
-});
+    // Draw vertical border
+    for (let col_index=0; col_index < COLS; ++col_index) {
+        ctx.fillText("=", col_index * block_width + block_width * 2, block_height * (ROWS + 1));
+        if (col_index % 2 === 0) 
+            ctx.fillText("\\", col_index * block_width + block_width * 2, block_height * (ROWS + 2));
+        else 
+            ctx.fillText("/", col_index * block_width + block_width * 2, block_height * (ROWS + 2));
+    }
+    // Draw board blocks
+    for (let row_index=0; row_index < ROWS; ++row_index)  {
+        for (let col_index=0; col_index < COLS; ++col_index) {
+            if (col_index % 2 == 1)  
+                ctx.fillText(".", col_index * block_width + block_width * 2, block_height * (row_index + 1));
+        }
+    }
+
+}
+draw();
 
 </script>

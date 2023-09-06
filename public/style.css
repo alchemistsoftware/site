@@ -43,8 +43,11 @@ ul,p,h1 {
     margin: 1%;
 }
 
-#copyright
-{
+#canvas-container {
+    text-align: center;
+}
+
+#copyright {
     text-align: center;
     font-size: small;
     opacity: 0.5;
