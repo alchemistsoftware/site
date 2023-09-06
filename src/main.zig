@@ -66,28 +66,29 @@ pub fn main() !void {
 
     var template_d_walker = try templates_d.walk(arena);
     while (try template_d_walker.next()) |walk_entry| {
-        if (walk_entry.kind == .Directory) {
-            try stdout.print("Making path {s}/{s}...\n", .{ pages_path, walk_entry.path });
-            try pages_d.makePath(walk_entry.path);
-            continue;
+        switch (walk_entry.kind) {
+            .directory => {
+                try stdout.print("Making path {s}/{s}...\n", .{ pages_path, walk_entry.path });
+                try pages_d.makePath(walk_entry.path);
+            },
+            .file => {
+                try stdout.print("Writing {s}/{s}...\n", .{ pages_path, walk_entry.path });
+                const template_bytes = try templates_d.dir.readFile(walk_entry.path, template_byte_buffer);
+                const page_f = try pages_d.createFile(walk_entry.path, .{});
+                defer page_f.close();
+                const page_writer = page_f.writer();
+                try page_writer.writeAll("<!DOCTYPE html>\n");
+                try page_writer.writeAll("<html lang=\"en\">\n");
+                try page_writer.writeAll(raw_head_html);
+                try page_writer.writeAll("<body>\n");
+                try page_writer.writeAll(raw_navbar_html);
+                try page_writer.writeAll(template_bytes);
+                try page_writer.writeAll(raw_copyright_html);
+                try page_writer.writeAll("</body>\n");
+                try page_writer.writeAll("</html>\n");
+            },
+            else => continue,
         }
-
-        try stdout.print("Writing {s}/{s}...\n", .{ pages_path, walk_entry.path });
-        const template_bytes = try templates_d.dir.readFile(walk_entry.path, template_byte_buffer);
-
-        const page_f = try pages_d.createFile(walk_entry.path, .{});
-        defer page_f.close();
-        const page_writer = page_f.writer();
-
-        try page_writer.writeAll("<!DOCTYPE html>\n");
-        try page_writer.writeAll("<html lang=\"en\">\n");
-        try page_writer.writeAll(raw_head_html);
-        try page_writer.writeAll("<body>\n");
-        try page_writer.writeAll(raw_navbar_html);
-        try page_writer.writeAll(template_bytes);
-        try page_writer.writeAll(raw_copyright_html);
-        try page_writer.writeAll("</body>\n");
-        try page_writer.writeAll("</html>\n");
     }
 
     try bw.flush();
