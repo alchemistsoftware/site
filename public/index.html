@@ -21,7 +21,7 @@
 </div>
 <div id="activity"></div>
 <p id="canvas-container">
-    <canvas id="canvas" width="900" height="600"></canvas>
+    <canvas id="canvas" width="700" height="800"></canvas>
 </p>
 <p id="copyright">Copyright Alchemist Software LLC 2023</p></body>
 </html>
@@ -61,12 +61,15 @@ async function getGithubEvents() {
 //   });
 // });
 
-// NOTE(caleb): Why does this exist? 09/05/23 -- Funner than doing my math homework.
+// NOTE(caleb): Why does this exist? 09/05/23 -- Funner than doing my math homework. 
+// Also if you are reading this please hire me I need a job. 
 // Tetris -----------------------------------------------------------------------------------------
 
+const CANVAS_WIDTH = 700;
+const CANVAS_HEIGHT = 800;
 const ROWS = 20;
 const COLS = 20;
-const BLOCK_STR = "■";
+const BLOCK = '[]';
 const TETRONIMO_DATA = [
     [
         1, 0, 0, 0, // Straight
@@ -103,115 +106,220 @@ const TETRONIMO_DATA = [
 const Tetronimo = {
     straight: 0,
     square: 1,
+    t: 2,
+    l: 3,
+    skew: 4,
 }; 
 
-const Orientation = {
-    up: 0,
-    right: 1,
-    down: 2,
-    left: 3,
-};
-
-function rotate(piece_buffer) {
-    result = []
+function rotatePieceBuffer(tmp_piece_buffer, piece_buffer) {
+    // Zero out tmp buffer
     for (let row_index=0; row_index < 4; ++row_index) { 
         for (let col_index=0; col_index < 4; ++col_index) {
-            result.push(0);
+            tmp_piece_buffer[row_index * 4 + col_index] = 0;
         }
     }
-
+    // Write rotatePieceBufferd tetro to tmp buffer
     for (let row_index=0; row_index < 4; ++row_index)  {
         for (let col_index=0; col_index < 4; ++col_index) {
-            result[row_index * 4 + col_index] = piece_buffer[(4 - (col_index + 1)) * 4 + row_index];
+            tmp_piece_buffer[row_index * 4 + col_index] = 
+                piece_buffer[(4 - (col_index + 1)) * 4 + row_index];
         }
     }
+    // Copy tmp buffer to piece buffer
+    for (let row_index=0; row_index < 4; ++row_index) { 
+        for (let col_index=0; col_index < 4; ++col_index) {
+            piece_buffer[row_index * 4 + col_index] = tmp_piece_buffer[row_index * 4 + col_index];
+        }
+    }
+}
 
-    return result;
+function loadPieceBuffer(piece_buffer, tetro_type) {
+    for (let row_index=0; row_index < 4; ++row_index)  {
+        for (let col_index=0; col_index < 4; ++col_index)  {
+            piece_buffer[row_index * 4 + col_index] = 
+                TETRONIMO_DATA[tetro_type][row_index * 4 + col_index];
+        }
+    }
 }
 
 function draw(ctx, board, active_tetro, block_dim) {
     ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, 900, 600); 
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); 
 
-    // Draw board border
-    // ctx.fillStyle = "#2e4229"; // Cool old schoolish green
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "#2e4229"; // Cool old schoolish green
 
-    // Horizontal border
-    for (let row_index=0; row_index < ROWS + 1; ++row_index)  {
-        ctx.fillText("!<", 0, block_dim[1] * (row_index + 1));
-        ctx.fillText(">!", COLS*block_dim[0] + block_dim[0] * 2, block_dim[1] * (row_index + 1));
-    }
     // Vertical border
+    for (let row_index=0; row_index < ROWS + 1; ++row_index)  {
+        ctx.fillText("!<", 0, block_dim[1] * (row_index + 1), block_dim[0]);
+        ctx.fillText(">!", (COLS + 1) * block_dim[0], block_dim[1] * (row_index + 1), block_dim[0]);
+    }
+    // Horizontal border
     for (let col_index=0; col_index < COLS; ++col_index) {
-        ctx.fillText("=", col_index * block_dim[0] + block_dim[0] * 2, block_dim[1] * (ROWS + 1));
+        ctx.fillText("=", col_index * block_dim[0] + block_dim[0], block_dim[1] * (ROWS + 1), block_dim[0]);
         if (col_index % 2 === 0) 
-            ctx.fillText("\\", col_index * block_dim[0] + block_dim[0] * 2, block_dim[1] * (ROWS + 2));
+            ctx.fillText("\\", col_index * block_dim[0] + block_dim[0], block_dim[1] * (ROWS + 2), block_dim[0]);
         else 
-            ctx.fillText("/", col_index * block_dim[0] + block_dim[0] * 2, block_dim[1] * (ROWS + 2));
+            ctx.fillText("/", col_index * block_dim[0] + block_dim[0], block_dim[1] * (ROWS + 2), block_dim[0]);
     }
-
-    
     // Active tetronimo
-    let piece_buffer = []
-    for (let row_index=0; row_index < 4; ++row_index)  {
-        for (let col_index=0; col_index < 4; ++col_index)  {
-            piece_buffer[row_index * 4 + col_index] = 
-                TETRONIMO_DATA[active_tetro.type][row_index * 4 + col_index];
-        }
-    }
-    for (let ori_index=0; ori_index < active_tetro.ori; ++ori_index) 
-        piece_buffer = rotate(piece_buffer);
     for (let row_index=0; row_index < 4; ++row_index) { 
         for (let col_index=0; col_index < 4; ++col_index) { 
-            if (piece_buffer[row_index * 4 + col_index])
-                ctx.fillText(BLOCK_STR, (active_tetro.col + col_index) * block_dim[0] + block_dim[0] * 2, block_dim[1] * (active_tetro.row + row_index + 1));
+            if (active_tetro.piece_buffer[row_index * 4 + col_index])
+                ctx.fillText(BLOCK, (active_tetro.col + col_index) * block_dim[0] + block_dim[0], block_dim[1] * (active_tetro.row + row_index + 1), block_dim[0]);
         }
     }
-    
     // Board blocks
     for (let row_index=0; row_index < ROWS; ++row_index)  {
         for (let col_index=0; col_index < COLS; ++col_index) {
             if (board[row_index * COLS + col_index] != 0) {
-                ctx.fillText(BLOCK_STR, col_index * block_dim[0] + block_dim[0] * 2, block_dim[1] * (row_index + 1));
+                ctx.fillText(BLOCK, col_index * block_dim[0] + block_dim[0], block_dim[1] * (row_index + 1), block_dim[0]);
             } else if (col_index % 2 == 1) {  
                 if ((row_index >= active_tetro.row && row_index < active_tetro.row + 4) && 
                     (col_index >= active_tetro.col && col_index < active_tetro.col + 4) && 
-                    (piece_buffer[(row_index - active_tetro.row) * 4 + (col_index - active_tetro.col)]))
+                    (active_tetro.piece_buffer[(row_index - active_tetro.row) * 4 + (col_index - active_tetro.col)]))
                         continue;
-                ctx.fillText(".", col_index * block_dim[0] + block_dim[0] * 2, block_dim[1] * (row_index + 1));
+                ctx.fillText(".", col_index * block_dim[0] + block_dim[0], block_dim[1] * (row_index + 1), block_dim[0]);
             }
         }
     }
 
 }
 
-const ctx = document.getElementById("canvas").getContext("2d");
-ctx.font = "32px sans-serif";
-const block_text_metrics = ctx.measureText(BLOCK_STR);
-const block_width = block_text_metrics.width;
-const block_height = block_text_metrics.actualBoundingBoxAscent;
-const block_dim = [block_width, block_height];
+function isValidMove(d_piece_pos, active_tetro, board) {
+    let valid_move = true;
+    for (let row_index=0; row_index < 4; ++row_index) {
+        for (let col_index=0; col_index < 4; ++col_index) {
+            if (active_tetro.piece_buffer[row_index * 4 + col_index] &&  
+                ((active_tetro.col + col_index + d_piece_pos[1] < 0) ||
+                 (active_tetro.col + col_index + d_piece_pos[1] >= COLS) || 
+                 (active_tetro.row + row_index + d_piece_pos[0] >= ROWS) ||
+                 (board[(active_tetro.row + row_index + d_piece_pos[0]) * COLS + active_tetro.col + col_index + d_piece_pos[1]]) ||
+                 (board[(active_tetro.row + row_index + d_piece_pos[0]) * COLS + active_tetro.col + col_index + d_piece_pos[1]]))) 
+            {
+                valid_move = false;
+                break;
+            }
+        }
+    }
+    return valid_move;
+}
 
-const board = [];
-for (let row_index=0; row_index < ROWS; ++row_index)  {
-    for (let col_index=0; col_index < COLS; ++col_index) {
-        board.push(0);
+function DEBUGPrintPieceBuffer(b) { // TODO(caleb): DELETE ME !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    for (let row_index=0; row_index < 4; ++row_index)  {
+        console.log(b.slice(row_index * 4, row_index * 4 + 4));
     }
 }
 
-const active_tetro = {
-    ori: Orientation.up,
-    type: Tetronimo.straight,  
-    row: 3,
-    col: 0,
-};
+function initTetris() {
+    const ctx = document.getElementById("canvas").getContext("2d");
+    ctx.font = "2em sans-serif";
+    ctx.fontKerning = "none";
+    const block_text_metrics = ctx.measureText(BLOCK);
+    const block_width = block_text_metrics.width;
+    const block_height = block_text_metrics.fontBoundingBoxAscent;
+    const block_dim = [block_width, block_height];
 
-draw(ctx, board, active_tetro, block_dim); // Initial draw
-setInterval(() => { // Game loop
-    // active_tetro.row += 1;
-    active_tetro.ori = ((active_tetro.ori + 1) % 4);
-    draw(ctx, board, active_tetro, block_dim);
-}, 1000);
+    const board = [];
+    for (let row_index=0; row_index < ROWS; ++row_index)  {
+        for (let col_index=0; col_index < COLS; ++col_index) {
+            board.push(0);
+        }
+    }
 
+    const active_tetro = {
+        row: 3,
+        col: 1,
+        piece_buffer: [
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+        ], 
+    };
+
+    // TODO(caleb): Pick a random piece type
+    loadPieceBuffer(active_tetro.piece_buffer, Tetronimo.skew);
+    
+    const rotate_scratch_buffer = [
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+    ];
+
+    const d_piece_pos = [0, 0];
+    let wants_rotate = false;
+
+    // Setup control handler
+    window.addEventListener("keydown", e => {
+        e.preventDefault(); // Don't do random $hit on the page.
+        switch(e.code) {
+            case "KeyA":
+            case "ArrowLeft": {
+                d_piece_pos[1] -= 1;
+            } break;
+            case "KeyD":
+            case "ArrowRight": {
+                d_piece_pos[1] += 1;
+            } break;
+            case "KeyS":
+            case "ArrowDown": {
+                d_piece_pos[0] += 1;
+            } break;
+            case "KeyR": 
+            case "Space": { 
+                wants_rotate = true;
+            } break;
+            default: break;
+        }
+    });
+    
+    let last_time_ms = window.performance.now();
+    function gameLoop() { 
+        const now_ms = window.performance.now();
+        if (now_ms - last_time_ms >= 1000) {
+            last_time_ms = now_ms;
+            d_piece_pos[0] = 1;
+            d_piece_pos[1] = 0;
+        }
+        
+        if (d_piece_pos[0] || d_piece_pos[1]) {
+            if (isValidMove(d_piece_pos, active_tetro, board)) {
+                active_tetro.row += d_piece_pos[0];
+                active_tetro.col += d_piece_pos[1];
+                if (d_piece_pos[0])  
+                    last_time_ms = now_ms; // NOTE(caleb): Reset forced row + 1 timer.
+            } else if (d_piece_pos[0] > 0) {
+                // Lock piece to board
+                for (let row_index=0; row_index < 4; ++row_index) {
+                    for (let col_index=0; col_index < 4; ++col_index) {
+                        if (active_tetro.piece_buffer[row_index * 4 + col_index]) {
+                            board[(active_tetro.row + row_index) * COLS + active_tetro.col + col_index] = 1;
+                        }  
+                    }
+                }
+                loadPieceBuffer(active_tetro.piece_buffer, Tetronimo.l);
+                active_tetro.row = 0;
+                active_tetro.col = 3;
+            }
+            d_piece_pos[0] = 0;
+            d_piece_pos[1] = 0;
+        }
+         
+        if (wants_rotate) { 
+            rotatePieceBuffer(rotate_scratch_buffer, active_tetro.piece_buffer); 
+            if (!isValidMove([0, 0], active_tetro, board)) { 
+                rotatePieceBuffer(rotate_scratch_buffer, active_tetro.piece_buffer); 
+                rotatePieceBuffer(rotate_scratch_buffer, active_tetro.piece_buffer); 
+                rotatePieceBuffer(rotate_scratch_buffer, active_tetro.piece_buffer); 
+            }
+            wants_rotate = false;
+        }
+
+        draw(ctx, board, active_tetro, block_dim);
+        window.requestAnimationFrame(gameLoop);
+    }
+    window.requestAnimationFrame(gameLoop);
+}
+window.onload = initTetris;
 </script>
