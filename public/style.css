@@ -35,10 +35,6 @@ ul,p,h1 {
     margin: 1%;
 }
 
-canvas {
-    border: 1px dashed var(--soft_white);
-}
-
 #canvas-container {
     text-align: center;
 }
@@ -68,8 +64,10 @@ canvas {
 }
 
 .template-container{
-    margin: 1em;   
-}
+    margin-top: 1%;
+    margin-left: 25%;
+    margin-right: 25%;
+}}
 
 .right-left-margin-container{
     background-color: var(--soft_black);
