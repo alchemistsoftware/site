@@ -5,9 +5,9 @@ const templates_path = "templates";
 const template_buffer_size = 1024 * 8;
 
 const splash =
-    \\==============================
-    \\* Static Site Generator v0.1 *
-    \\==============================
+    \\================================
+    \\* Static Site Generator v0.0.2 *
+    \\================================
     \\
 ;
 
@@ -29,10 +29,9 @@ const raw_navbar_html =
     \\    <h1 class="fancy-header">Alchemist Software</h1>
     \\    <nav class="navbar">
     \\        <a href="/index.html">Home</a>
-    \\        <a href="/pages/posts.html">Posts</a>
+    \\        <a href="/pages/resume.html">Resume</a>
     \\        <a href="/pages/projects.html">Projects</a>
-    \\        <a href="/pages/about.html">About</a>
-    \\        <a href="/pages/contact.html">Contact</a>
+    \\        <a href="https://github.com/cabarger">Github</a>
     \\    </nav>
     \\</div>
     \\
@@ -82,7 +81,9 @@ pub fn main() !void {
                 try page_writer.writeAll(raw_head_html);
                 try page_writer.writeAll("<body>\n");
                 try page_writer.writeAll(raw_navbar_html);
+                try page_writer.writeAll("<div class=\"template-container\">");
                 try page_writer.writeAll(template_bytes);
+                try page_writer.writeAll("</div>");
                 try page_writer.writeAll(raw_copyright_html);
                 try page_writer.writeAll("</body>\n");
                 try page_writer.writeAll("</html>\n");

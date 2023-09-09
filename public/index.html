@@ -13,16 +13,15 @@
     <h1 class="fancy-header">Alchemist Software</h1>
     <nav class="navbar">
         <a href="/index.html">Home</a>
-        <a href="/pages/posts.html">Posts</a>
+        <a href="/pages/resume.html">Resume</a>
         <a href="/pages/projects.html">Projects</a>
-        <a href="/pages/about.html">About</a>
-        <a href="/pages/contact.html">Contact</a>
+        <a href="https://github.com/cabarger">Github</a>
     </nav>
 </div>
+<div id="canvas-container">
+    <canvas id="canvas" width="500em" height="600em"></canvas>
+</div>
 <div id="activity"></div>
-<p id="canvas-container">
-    <canvas id="canvas" width="700" height="800"></canvas>
-</p>
 <p id="copyright">Copyright Alchemist Software LLC 2023</p></body>
 </html>
 
@@ -41,34 +40,32 @@ async function getGithubEvents() {
     return promise;
 }
 
-// const activity_element = document.getElementById("activity"); 
-// getGithubEvents().then(events => {
-//   events.forEach((event) => {
-//     if (event.type == "PushEvent") {
-//       let card = document.createElement("div");
-//       card.className = "card"
+const activity_element = document.getElementById("activity"); 
+getGithubEvents().then(events => {
+  events.forEach((event) => {
+    if (event.type == "PushEvent") {
+      let card = document.createElement("div");
+      card.className = "card"
 
-//       let push_info = document.createElement("p");
-//       push_info.innerHTML = event.created_at.slice(0, 10) + ": pushed " + event.payload.commits.length + " commits to " + `<a href="https://github.com/${event.repo.name}">${event.repo.name}</a>`;
-//       card.appendChild(push_info);
-//       event.payload.commits.forEach((commit) => {
-//         let commit_message = document.createElement("p");
-//         commit_message.innerHTML = commit.message;
-//         card.appendChild(commit_message);
-//       });
-//       activity_element.appendChild(card);
-//     }
-//   });
-// });
+      let push_info = document.createElement("p");
+      push_info.innerHTML = event.created_at.slice(0, 10) + ": pushed " + event.payload.commits.length + " commits to " + `<a href="https://github.com/${event.repo.name}">${event.repo.name}</a>`;
+      card.appendChild(push_info);
+      event.payload.commits.forEach((commit) => {
+        let commit_message = document.createElement("p");
+        commit_message.innerHTML = commit.message;
+        card.appendChild(commit_message);
+      });
+      activity_element.appendChild(card);
+    }
+  });
+});
 
 // NOTE(caleb): Why does this exist? 09/05/23 -- Funner than doing my math homework. 
 // Also if you are reading this please hire me I need a job. 
 // Tetris -----------------------------------------------------------------------------------------
 
-const CANVAS_WIDTH = 700;
-const CANVAS_HEIGHT = 800;
 const ROWS = 20;
-const COLS = 20;
+const COLS = 10;
 const BLOCK = '[]';
 const FONT_VERT_PAD_PX = 8;
 const TETRONIMO_DATA = [
@@ -156,11 +153,11 @@ function loadPieceBuffer(scratch_piece_buffer, piece_buffer, tetro_type, rotate_
 }
 
 function draw(ctx, board, active_tetro, next_up_piece_buffer, block_dim) {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); 
+    ctx.fillStyle = "#252423"; // Soft black
+    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight); 
 
-    ctx.fillStyle = "#2e4229"; // Cool old schoolish green
-
+    ctx.fillStyle = "#98c379"; // Cool old schoolish green
+    
     // Vertical border
     for (let row_index=0; row_index < ROWS + 1; ++row_index)  {
         ctx.fillText("!<", 0, block_dim[1] * (row_index + 1), block_dim[0]);
@@ -174,8 +171,6 @@ function draw(ctx, board, active_tetro, next_up_piece_buffer, block_dim) {
         else 
             ctx.fillText("/", col_index * block_dim[0] + block_dim[0], block_dim[1] * (ROWS + 2), block_dim[0]);
     }
-
-    ctx.fillStyle = "#2e5229"; // Slightly more green
     // Active tetronimo
     for (let row_index=0; row_index < 4; ++row_index) { 
         for (let col_index=0; col_index < 4; ++col_index) { 
@@ -183,8 +178,6 @@ function draw(ctx, board, active_tetro, next_up_piece_buffer, block_dim) {
                 ctx.fillText(BLOCK, (active_tetro.col + col_index) * block_dim[0] + block_dim[0], block_dim[1] * (active_tetro.row + row_index + 1), block_dim[0]);
         }
     }
-
-    ctx.fillStyle = "#2e4229"; // Cool old schoolish green
     // Board blocks
     for (let row_index=0; row_index < ROWS; ++row_index)  {
         for (let col_index=0; col_index < COLS; ++col_index) {
@@ -199,22 +192,24 @@ function draw(ctx, board, active_tetro, next_up_piece_buffer, block_dim) {
             }
         }
     }
-
-    ctx.fillText("next:", (COLS + 1 + 1) * block_dim[0] + block_dim[0], 
-        block_dim[1]);        
-
     // Next up tetro
+    ctx.fillText("next:", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, 
+        block_dim[1]);        
     for (let row_index=0; row_index < 4; ++row_index) { 
         for (let col_index=0; col_index < 4; ++col_index) { 
             if (next_up_piece_buffer[row_index * 4 + col_index])
-                ctx.fillText(BLOCK, (COLS + 1 + 1 + col_index) * block_dim[0] + block_dim[0], 
+                ctx.fillText(BLOCK, (COLS + 1 + 1 + col_index) * block_dim[0] + block_dim[0] / 2, 
                     block_dim[1] * (row_index + 1 + 1), block_dim[0]);
         }
     }
-
-    // TODO(caleb): High score
-    // TODO(caleb): Score
-    // TODO(caleb): Piece statistics
+    
+    ctx.fillStyle = "#e06c75"; // Soft red
+    ctx.fillText("TODO(caleb):", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 6);        
+        ctx.fillStyle = "#BBBBBB"; // Soft white
+    ctx.fillText(" Score", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 7);        
+    ctx.fillText(" Piece stats", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 8);        
+    ctx.fillText(" Game over", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 9);        
+    ctx.fillText(" Touch ctrls", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 10);        
 }
 
 function isValidMove(d_piece_pos, active_tetro, board) {
@@ -248,8 +243,7 @@ function randomInt(max) {
 
 function initTetris() {
     const ctx = document.getElementById("canvas").getContext("2d");
-    ctx.font = "2em sans-serif";
-    ctx.fontKerning = "none";
+    ctx.font = "1.5em ComicMono";
     const block_text_metrics = ctx.measureText(BLOCK);
 
     const block_width = block_text_metrics.width;
@@ -413,16 +407,12 @@ function initTetris() {
                 }
                 if (!isValidMove([0, 0], active_tetro, board)) {
                     draw(ctx, board, active_tetro, next_up_piece_buffer, block_dim);
-                    debugger;
                     return; // Game over
                 }
-                
-
             }
             d_piece_pos[0] = 0;
             d_piece_pos[1] = 0;
         }
-
          
         if (wants_rotate) { 
             rotatePieceBuffer(scratch_piece_buffer, active_tetro.piece_buffer); 

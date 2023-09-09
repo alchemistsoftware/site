@@ -1,26 +1,18 @@
 :root {
-    --off_black: #151717;
+    --soft_red: #e06c75;
+    --soft_black: #252423;
+    --soft_white: #BBBBBB;
+    --link_blue: #61afef;
+    --code_green: #98c379;
 }
  
 @font-face {
-    font-family: "FiraCode-Regular";
-    src: url("./assets/fonts/FiraCode-Regular.ttf");
+    font-family: "ComicMono";
+    src: url("./assets/fonts/ComicMono.ttf");
 }
 @font-face {
-    font-family: "FiraCode-Retina";
-    src: url("./assets/fonts/FiraCode-Retina.ttf");
-}
-@font-face {
-    font-family: "FiraCode-Bold";
-    src: url("./assets/fonts/FiraCode-Bold.ttf");
-}
-@font-face {
-    font-family: "FiraCode-SemiBold";
-    src: url("./assets/fonts/FiraCode-SemiBold.ttf");
-}
-@font-face {
-    font-family: "FiraCode-Light";
-    src: url("./assets/fonts/FiraCode-Light.ttf");
+    font-family: "ComicMono-Bold";
+    src: url("./assets/fonts/ComicMono-Bold.ttf");
 }
 
 *{
@@ -29,9 +21,9 @@
 }
 
 body {
-    background-color: black;
-    font-family: "FiraCode-Regular";
-    color: white;
+    background-color: var(--soft_black);
+    font-family: "ComicMono";
+    color: var(--soft_white);
     font-size: medium;
 }
 
@@ -41,6 +33,10 @@ li,p {
 
 ul,p,h1 {
     margin: 1%;
+}
+
+canvas {
+    border: 1px dashed var(--soft_white);
 }
 
 #canvas-container {
@@ -71,22 +67,27 @@ ul,p,h1 {
     align-items: center;
 }
 
+.template-container{
+    margin: 1em;   
+}
+
 .right-left-margin-container{
-    background-color: black;
+    background-color: var(--soft_black);
     margin-left: 10%;
     margin-right: 10%;
 }
 
 .card {
-    border: 1px solid white;
+    border: 1px solid var(--soft_white);
     width: fit-content;
-    background-color: var(--off_black);
+    background-color: var(--soft_black);
     text-align: center;
     margin: 0.25em;
 }
 
 .fancy-header {
-    font-family: "FiraCode-Bold";
+    font-family: "ComicMono-Bold";
+    color: var(--soft_red);
     text-align: center;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
@@ -105,11 +106,5 @@ img {
     width: 100%;
 }
 a {
-    color: white;
+    color: var(--link_blue);
 }
-
-#hacker-dog-container {
-    margin: 1%;
-    text-align: center;
-}
-
