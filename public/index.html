@@ -70,6 +70,7 @@ const CANVAS_HEIGHT = 800;
 const ROWS = 20;
 const COLS = 20;
 const BLOCK = '[]';
+const FONT_VERT_PAD_PX = 8;
 const TETRONIMO_DATA = [
     [
         1, 0, 0, 0, // Straight
@@ -96,10 +97,10 @@ const TETRONIMO_DATA = [
         0, 0, 0, 0 
     ], 
     [
-        0, 0, 0, 0, // Skew
+        0, 1, 1, 0, // Skew
+        1, 1, 0, 0,
         0, 0, 0, 0,
-        0, 1, 1, 0,
-        1, 1, 0, 0 
+        0, 0, 0, 0 
     ], 
 ];
 
@@ -109,15 +110,11 @@ const Tetronimo = {
     t: 2,
     l: 3,
     skew: 4,
+
+    count: 5, 
 }; 
 
 function rotatePieceBuffer(tmp_piece_buffer, piece_buffer) {
-    // Zero out tmp buffer
-    for (let row_index=0; row_index < 4; ++row_index) { 
-        for (let col_index=0; col_index < 4; ++col_index) {
-            tmp_piece_buffer[row_index * 4 + col_index] = 0;
-        }
-    }
     // Write rotatePieceBufferd tetro to tmp buffer
     for (let row_index=0; row_index < 4; ++row_index)  {
         for (let col_index=0; col_index < 4; ++col_index) {
@@ -125,24 +122,40 @@ function rotatePieceBuffer(tmp_piece_buffer, piece_buffer) {
                 piece_buffer[(4 - (col_index + 1)) * 4 + row_index];
         }
     }
-    // Copy tmp buffer to piece buffer
-    for (let row_index=0; row_index < 4; ++row_index) { 
+    for (let byte_index=0; byte_index < 16; ++byte_index) 
+        piece_buffer[byte_index] = tmp_piece_buffer[byte_index];
+}
+
+function loadPieceBuffer(scratch_piece_buffer, piece_buffer, tetro_type, rotate_amount) {
+    for (let byte_index=0; byte_index < 16; ++byte_index) 
+        piece_buffer[byte_index] = TETRONIMO_DATA[tetro_type][byte_index];
+
+    // Rotate
+    for(let rotation_count=0; rotation_count < rotate_amount; ++rotation_count) 
+        rotatePieceBuffer(scratch_piece_buffer, piece_buffer); 
+
+    // Pack piece buffer into top row. 
+    let row_offset = 0;
+    outer: for (let row_index=0; row_index < 4; ++row_index) {
         for (let col_index=0; col_index < 4; ++col_index) {
-            piece_buffer[row_index * 4 + col_index] = tmp_piece_buffer[row_index * 4 + col_index];
+            if (piece_buffer[row_index * 4 + col_index]) {
+                row_offset = row_index;
+                break outer;
+            }
+        }
+    }
+    for (let row_index=0; row_index < 4 - row_offset; ++row_index) {
+        for (let col_index=0; col_index < 4; ++col_index) {
+            if (!piece_buffer[row_index * 4 + col_index]) {
+                piece_buffer[row_index * 4 + col_index] =                          
+                    piece_buffer[(row_index + row_offset) * 4 + col_index];                           
+                piece_buffer[(row_index + row_offset) * 4 + col_index] = 0;                    
+            }
         }
     }
 }
 
-function loadPieceBuffer(piece_buffer, tetro_type) {
-    for (let row_index=0; row_index < 4; ++row_index)  {
-        for (let col_index=0; col_index < 4; ++col_index)  {
-            piece_buffer[row_index * 4 + col_index] = 
-                TETRONIMO_DATA[tetro_type][row_index * 4 + col_index];
-        }
-    }
-}
-
-function draw(ctx, board, active_tetro, block_dim) {
+function draw(ctx, board, active_tetro, next_up_piece_buffer, block_dim) {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); 
 
@@ -161,6 +174,8 @@ function draw(ctx, board, active_tetro, block_dim) {
         else 
             ctx.fillText("/", col_index * block_dim[0] + block_dim[0], block_dim[1] * (ROWS + 2), block_dim[0]);
     }
+
+    ctx.fillStyle = "#2e5229"; // Slightly more green
     // Active tetronimo
     for (let row_index=0; row_index < 4; ++row_index) { 
         for (let col_index=0; col_index < 4; ++col_index) { 
@@ -168,6 +183,8 @@ function draw(ctx, board, active_tetro, block_dim) {
                 ctx.fillText(BLOCK, (active_tetro.col + col_index) * block_dim[0] + block_dim[0], block_dim[1] * (active_tetro.row + row_index + 1), block_dim[0]);
         }
     }
+
+    ctx.fillStyle = "#2e4229"; // Cool old schoolish green
     // Board blocks
     for (let row_index=0; row_index < ROWS; ++row_index)  {
         for (let col_index=0; col_index < COLS; ++col_index) {
@@ -183,6 +200,21 @@ function draw(ctx, board, active_tetro, block_dim) {
         }
     }
 
+    ctx.fillText("next:", (COLS + 1 + 1) * block_dim[0] + block_dim[0], 
+        block_dim[1]);        
+
+    // Next up tetro
+    for (let row_index=0; row_index < 4; ++row_index) { 
+        for (let col_index=0; col_index < 4; ++col_index) { 
+            if (next_up_piece_buffer[row_index * 4 + col_index])
+                ctx.fillText(BLOCK, (COLS + 1 + 1 + col_index) * block_dim[0] + block_dim[0], 
+                    block_dim[1] * (row_index + 1 + 1), block_dim[0]);
+        }
+    }
+
+    // TODO(caleb): High score
+    // TODO(caleb): Score
+    // TODO(caleb): Piece statistics
 }
 
 function isValidMove(d_piece_pos, active_tetro, board) {
@@ -210,13 +242,18 @@ function DEBUGPrintPieceBuffer(b) { // TODO(caleb): DELETE ME !!!!!!!!!!!!!!!!!!
     }
 }
 
+function randomInt(max) {
+    return Math.floor(Math.random() * max);
+}
+
 function initTetris() {
     const ctx = document.getElementById("canvas").getContext("2d");
     ctx.font = "2em sans-serif";
     ctx.fontKerning = "none";
     const block_text_metrics = ctx.measureText(BLOCK);
+
     const block_width = block_text_metrics.width;
-    const block_height = block_text_metrics.fontBoundingBoxAscent;
+    const block_height = block_text_metrics.fontBoundingBoxAscent + FONT_VERT_PAD_PX;
     const block_dim = [block_width, block_height];
 
     const board = [];
@@ -225,10 +262,9 @@ function initTetris() {
             board.push(0);
         }
     }
-
     const active_tetro = {
-        row: 3,
-        col: 1,
+        row: 0, 
+        col: 4,
         piece_buffer: [
             0, 0, 0, 0,
             0, 0, 0, 0,
@@ -236,39 +272,55 @@ function initTetris() {
             0, 0, 0, 0,
         ], 
     };
-
-    // TODO(caleb): Pick a random piece type
-    loadPieceBuffer(active_tetro.piece_buffer, Tetronimo.skew);
-    
-    const rotate_scratch_buffer = [
+    const scratch_piece_buffer = [ 
         0, 0, 0, 0,
         0, 0, 0, 0,
         0, 0, 0, 0,
         0, 0, 0, 0,
     ];
-
+    const next_up_piece_buffer = [ 
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+    ];
     const d_piece_pos = [0, 0];
     let wants_rotate = false;
+    let wants_drop = false;
+    let next_tetro_type = randomInt(Tetronimo.count);
+    let next_tetro_rotation = randomInt(4);
+
+    loadPieceBuffer(scratch_piece_buffer, 
+        active_tetro.piece_buffer, randomInt(Tetronimo.count), randomInt(4));
+    loadPieceBuffer(scratch_piece_buffer, 
+        next_up_piece_buffer, randomInt(Tetronimo.count), randomInt(4));
 
     // Setup control handler
     window.addEventListener("keydown", e => {
-        e.preventDefault(); // Don't do random $hit on the page.
         switch(e.code) {
             case "KeyA":
             case "ArrowLeft": {
                 d_piece_pos[1] -= 1;
+                e.preventDefault(); 
             } break;
             case "KeyD":
             case "ArrowRight": {
                 d_piece_pos[1] += 1;
+                e.preventDefault(); 
             } break;
             case "KeyS":
             case "ArrowDown": {
                 d_piece_pos[0] += 1;
+                e.preventDefault(); 
+            } break;
+            case "KeyX": 
+            case "Enter": { 
+                wants_drop = true;
             } break;
             case "KeyR": 
             case "Space": { 
                 wants_rotate = true;
+                e.preventDefault(); 
             } break;
             default: break;
         }
@@ -281,6 +333,17 @@ function initTetris() {
             last_time_ms = now_ms;
             d_piece_pos[0] = 1;
             d_piece_pos[1] = 0;
+        }
+        
+        if (wants_drop) {
+            d_piece_pos[0] = 1;
+            d_piece_pos[1] = 0;
+            while(true) {
+                if (isValidMove(d_piece_pos, active_tetro, board)) {
+                    active_tetro.row += 1;
+                } else break;
+            }
+            wants_drop = false;
         }
         
         if (d_piece_pos[0] || d_piece_pos[1]) {
@@ -298,25 +361,80 @@ function initTetris() {
                         }  
                     }
                 }
-                loadPieceBuffer(active_tetro.piece_buffer, Tetronimo.l);
+
+                for (let row_index=ROWS - 1; row_index >= 0; --row_index) {
+                    let completed_row = true;
+                    for (let col_index=0; col_index < COLS; ++col_index) {
+                        if (!board[row_index * COLS + col_index]) {
+                            completed_row = false;
+                            break;
+                        }
+                    }
+                    if (completed_row) { // Handle moving everything down
+                        for (let copy_row_index=row_index; copy_row_index >= 0; --copy_row_index) {
+                            for (let col_index=0; col_index < COLS; ++col_index) {
+                                if (copy_row_index - 1 >= 0)
+                                    board[copy_row_index * COLS + col_index] = 
+                                        board[(copy_row_index - 1) * COLS + col_index];
+                            }
+                        }
+                        row_index++; // Check this row again
+                    }
+                }
+
+                for (let byte_index=0; byte_index < 16; ++byte_index)
+                    active_tetro.piece_buffer[byte_index] = next_up_piece_buffer[byte_index];
+                
+                loadPieceBuffer(scratch_piece_buffer, 
+                    next_up_piece_buffer,next_tetro_type, next_tetro_rotation);
+                next_tetro_type = randomInt(Tetronimo.count);
+                next_tetro_rotation = randomInt(4);
+                
+                // Decide where to place tetro.
+                let rightmost_column_index = 3;
+                outer: for (let row_index=0; row_index < 4; ++row_index)  {
+                    for (let col_index=3; col_index >= 0; --col_index)  {
+                        if (active_tetro.piece_buffer[row_index * 4 + col_index]) {
+                            rightmost_column_index = col_index;
+                            break outer;  
+                        }
+                    }
+                }
                 active_tetro.row = 0;
-                active_tetro.col = 3;
+                // HACK(caleb): This is just randomly rolling for positions, while the randomness is good.
+                // Don't game over if there exists possible piece placment.
+                // A potential solution is an inital random roll for a col position. If it is invalid than manually walk and find a valid spot
+                // If none exists game over. 
+                for (let insert_attempt_index=0; insert_attempt_index < 15; ++insert_attempt_index) {
+                    active_tetro.col = randomInt(COLS - rightmost_column_index - 1);
+                    if (isValidMove([0, 0], active_tetro, board)) {
+                        break;
+                    }
+                }
+                if (!isValidMove([0, 0], active_tetro, board)) {
+                    draw(ctx, board, active_tetro, next_up_piece_buffer, block_dim);
+                    debugger;
+                    return; // Game over
+                }
+                
+
             }
             d_piece_pos[0] = 0;
             d_piece_pos[1] = 0;
         }
+
          
         if (wants_rotate) { 
-            rotatePieceBuffer(rotate_scratch_buffer, active_tetro.piece_buffer); 
+            rotatePieceBuffer(scratch_piece_buffer, active_tetro.piece_buffer); 
             if (!isValidMove([0, 0], active_tetro, board)) { 
-                rotatePieceBuffer(rotate_scratch_buffer, active_tetro.piece_buffer); 
-                rotatePieceBuffer(rotate_scratch_buffer, active_tetro.piece_buffer); 
-                rotatePieceBuffer(rotate_scratch_buffer, active_tetro.piece_buffer); 
+                rotatePieceBuffer(scratch_piece_buffer, active_tetro.piece_buffer); 
+                rotatePieceBuffer(scratch_piece_buffer, active_tetro.piece_buffer); 
+                rotatePieceBuffer(scratch_piece_buffer, active_tetro.piece_buffer); 
             }
             wants_rotate = false;
         }
 
-        draw(ctx, board, active_tetro, block_dim);
+        draw(ctx, board, active_tetro, next_up_piece_buffer, block_dim);
         window.requestAnimationFrame(gameLoop);
     }
     window.requestAnimationFrame(gameLoop);
