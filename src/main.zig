@@ -5,9 +5,9 @@ const templates_path = "templates";
 const template_buffer_size = 1024 * 8;
 
 const splash =
-    \\==============================
-    \\* Static Site Generator v0.1 *
-    \\==============================
+    \\================================
+    \\* Static Site Generator v0.0.2 *
+    \\================================
     \\
 ;
 
@@ -29,10 +29,9 @@ const raw_navbar_html =
     \\    <h1 class="fancy-header">Alchemist Software</h1>
     \\    <nav class="navbar">
     \\        <a href="/index.html">Home</a>
-    \\        <a href="/pages/posts.html">Posts</a>
+    \\        <a href="/pages/resume.html">Resume</a>
     \\        <a href="/pages/projects.html">Projects</a>
-    \\        <a href="/pages/about.html">About</a>
-    \\        <a href="/pages/contact.html">Contact</a>
+    \\        <a href="https://github.com/cabarger">Github</a>
     \\    </nav>
     \\</div>
     \\
@@ -66,28 +65,31 @@ pub fn main() !void {
 
     var template_d_walker = try templates_d.walk(arena);
     while (try template_d_walker.next()) |walk_entry| {
-        if (walk_entry.kind == .Directory) {
-            try stdout.print("Making path {s}/{s}...\n", .{ pages_path, walk_entry.path });
-            try pages_d.makePath(walk_entry.path);
-            continue;
+        switch (walk_entry.kind) {
+            .directory => {
+                try stdout.print("Making path {s}/{s}...\n", .{ pages_path, walk_entry.path });
+                try pages_d.makePath(walk_entry.path);
+            },
+            .file => {
+                try stdout.print("Writing {s}/{s}...\n", .{ pages_path, walk_entry.path });
+                const template_bytes = try templates_d.dir.readFile(walk_entry.path, template_byte_buffer);
+                const page_f = try pages_d.createFile(walk_entry.path, .{});
+                defer page_f.close();
+                const page_writer = page_f.writer();
+                try page_writer.writeAll("<!DOCTYPE html>\n");
+                try page_writer.writeAll("<html lang=\"en\">\n");
+                try page_writer.writeAll(raw_head_html);
+                try page_writer.writeAll("<body>\n");
+                try page_writer.writeAll(raw_navbar_html);
+                try page_writer.writeAll("<div class=\"template-container\">");
+                try page_writer.writeAll(template_bytes);
+                try page_writer.writeAll("</div>");
+                try page_writer.writeAll(raw_copyright_html);
+                try page_writer.writeAll("</body>\n");
+                try page_writer.writeAll("</html>\n");
+            },
+            else => continue,
         }
-
-        try stdout.print("Writing {s}/{s}...\n", .{ pages_path, walk_entry.path });
-        const template_bytes = try templates_d.dir.readFile(walk_entry.path, template_byte_buffer);
-
-        const page_f = try pages_d.createFile(walk_entry.path, .{});
-        defer page_f.close();
-        const page_writer = page_f.writer();
-
-        try page_writer.writeAll("<!DOCTYPE html>\n");
-        try page_writer.writeAll("<html lang=\"en\">\n");
-        try page_writer.writeAll(raw_head_html);
-        try page_writer.writeAll("<body>\n");
-        try page_writer.writeAll(raw_navbar_html);
-        try page_writer.writeAll(template_bytes);
-        try page_writer.writeAll(raw_copyright_html);
-        try page_writer.writeAll("</body>\n");
-        try page_writer.writeAll("</html>\n");
     }
 
     try bw.flush();
