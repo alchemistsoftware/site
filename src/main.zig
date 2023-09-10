@@ -38,7 +38,7 @@ const raw_navbar_html =
 ;
 
 const raw_copyright_html =
-    \\<p id="copyright">Copyright Alchemist Software LLC 2023</p>
+    \\<div id="copyright-container"><p>Copyright Alchemist Software LLC 2023</p></div>
     \\
 ;
 

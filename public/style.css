@@ -24,7 +24,10 @@ body {
     background-color: var(--soft_black);
     font-family: "ComicMono";
     color: var(--soft_white);
+    min-height: 100vh;
     font-size: medium;
+    display: flex;
+    flex-flow: column;
 }
 
 li,p {
@@ -39,10 +42,10 @@ ul,p,h1 {
     text-align: center;
 }
 
-#copyright {
-    text-align: center;
+#copyright-container {
     font-size: small;
     opacity: 0.5;
+    text-align: center;
 }
 
 #changelog h1 {
@@ -64,10 +67,10 @@ ul,p,h1 {
 }
 
 .template-container{
-    margin-top: 1%;
-    margin-left: 25%;
-    margin-right: 25%;
-}}
+    padding-left: 1em;
+    flex: 1;
+    overflow: auto;
+}
 
 .right-left-margin-container{
     background-color: var(--soft_black);
