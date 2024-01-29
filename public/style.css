@@ -1,6 +1,6 @@
 :root {
     --soft_red: #e06c75;
-    --soft_black: #252423;
+    --soft_black: #151413;
     --soft_white: #BBBBBB;
     --link_blue: #61afef;
     --code_green: #98c379;
@@ -93,6 +93,13 @@ ul,p,h1 {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     width: 100%;
+}
+
+.sub-header {
+    font-family: "ComicMono-Bold";
+    margin-top: 0.5em;
+    color: var(--soft_white);
+    text-align: center;
 }
 
 .navbar{

@@ -16,17 +16,22 @@
         <a href="/pages/resume.html">Resume</a>
         <a href="/pages/projects.html">Projects</a>
         <a href="https://github.com/cabarger">Github</a>
+        <a href="https://twitter.com/calebbarger20">@calebbarger20</a>
     </nav>
+    <h2 class="sub-header">Caleb activity</h2>
 </div>
+<!--
 <div id="canvas-container">
     <canvas id="canvas" width="500em" height="600em"></canvas>
 </div>
+-->
 <div id="activity"></div>
 <div id="copyright-container"><p>Copyright Alchemist Software LLC 2023</p></div>
 </body>
 </html>
 
 <script>
+
 async function getGithubEvents() {
     let promise = new Promise((resolve) => {
         fetch(`https://api.github.com/users/cabarger/events/public`)
@@ -61,10 +66,10 @@ getGithubEvents().then(events => {
   });
 });
 
-// NOTE(caleb): Why does this exist? 09/05/23 -- Funner than doing my math homework. 
+/*
+//- cabarger: Why does this exist? 09/05/23 -- Funner than doing my math homework. 
 // Also if you are reading this please hire me I need a job. 
 // Tetris -----------------------------------------------------------------------------------------
-
 const ROWS = 20;
 const COLS = 10;
 const BLOCK = '[]';
@@ -154,7 +159,7 @@ function loadPieceBuffer(scratch_piece_buffer, piece_buffer, tetro_type, rotate_
 }
 
 function draw(ctx, board, active_tetro, next_up_piece_buffer, block_dim) {
-    ctx.fillStyle = "#252423"; // Soft black
+    ctx.fillStyle = "#151413"; // Soft black
     ctx.fillRect(0, 0, window.innerWidth, window.innerHeight); 
 
     ctx.fillStyle = "#98c379"; // Cool old schoolish green
@@ -431,4 +436,5 @@ function initTetris() {
     window.requestAnimationFrame(gameLoop);
 }
 window.onload = initTetris;
+*/
 </script>
