@@ -77,13 +77,23 @@ ul,p,h1 {
     margin-left: 10%;
     margin-right: 10%;
 }
-
 .card {
     border: 1px solid var(--soft_white);
-    width: fit-content;
     background-color: var(--soft_black);
     text-align: center;
     margin: 0.25em;
+}
+
+@media only screen and (max-width: 600px) {
+    .card {
+         width: 100%;
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    .card {
+         width: 600px;
+    }
 }
 
 .fancy-header {
