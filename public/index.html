@@ -18,13 +18,12 @@
         <a href="https://github.com/cabarger">Github</a>
         <a href="https://twitter.com/calebbarger20">@calebbarger20</a>
     </nav>
+    <h2 class="sub-header">Tetris... because why not?</h2>
+    <div id="canvas-container">
+        <canvas id="canvas" width="500em" height="600em"></canvas>
+    </div>
     <h2 class="sub-header">Caleb activity</h2>
 </div>
-<!--
-<div id="canvas-container">
-    <canvas id="canvas" width="500em" height="600em"></canvas>
-</div>
--->
 <div id="activity"></div>
 <div id="copyright-container"><p>Copyright Alchemist Software LLC 2023</p></div>
 </body>
@@ -211,13 +210,21 @@ function draw(ctx, board, active_tetro, next_up_piece_buffer, block_dim) {
         }
     }
     
-    ctx.fillStyle = "#e06c75"; // Soft red
-    ctx.fillText("TODO(caleb):", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 6);        
-        ctx.fillStyle = "#BBBBBB"; // Soft white
-    ctx.fillText(" Score", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 7);        
-    ctx.fillText(" Piece stats", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 8);        
-    ctx.fillText(" Game over", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 9);        
-    ctx.fillText(" Touch ctrls", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 10);        
+    ctx.fillStyle = "#ef6f75"; 
+    ctx.fillText("Controls:", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 6);        
+    ctx.fillStyle = "#BBBBBB"; // Soft white
+    ctx.fillText(" r - rotate", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 7);        
+    ctx.fillText(" arrow keys - ", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 8);        
+    ctx.fillText("  left/right", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 9);        
+    ctx.fillText(" x - drop", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 10);        
+    
+    ctx.fillStyle = "#ef6f75"; 
+    ctx.fillText("TODO(caleb):", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 12);        
+    ctx.fillStyle = "#BBBBBB"; // Soft white
+    ctx.fillText(" Score", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 13);        
+    ctx.fillText(" Piece stats", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 14);        
+    ctx.fillText(" Game over", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 15);        
+    ctx.fillText(" Touch ctrls", (COLS + 1 + 1) * block_dim[0] + block_dim[0] / 2, block_dim[1] * 16);        
 }
 
 function isValidMove(d_piece_pos, active_tetro, board) {
