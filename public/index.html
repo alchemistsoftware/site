@@ -32,6 +32,9 @@
 
 <script>
 
+///////////////////////////////
+//~ cabarger: Fetch github activity 
+
 async function getGithubEvents() {
     let promise = new Promise((resolve) => {
         fetch(`https://api.github.com/users/cabarger/events/public`)
@@ -66,10 +69,9 @@ getGithubEvents().then(events => {
   });
 });
 
-/*
-//- cabarger: Why does this exist? 09/05/23 -- Funner than doing my math homework. 
-// Also if you are reading this please hire me I need a job. 
-// Tetris -----------------------------------------------------------------------------------------
+///////////////////////////////
+//~ cabarger: Tetris 
+
 const ROWS = 20;
 const COLS = 10;
 const BLOCK = '[]';
@@ -436,5 +438,4 @@ function initTetris() {
     window.requestAnimationFrame(gameLoop);
 }
 window.onload = initTetris;
-*/
 </script>
