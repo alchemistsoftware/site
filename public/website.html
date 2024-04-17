@@ -25,7 +25,7 @@
     }
 
     .post {
-        border: 1px solid black; 
+        border: 1px solid black;
         width: 400px;
     }
 
@@ -45,7 +45,7 @@
 
     .like-container {
         display: flex;
-        align-items: center;    
+        align-items: center;
         gap: 10px;
     }
 
@@ -59,18 +59,113 @@
 
 <body>
     <div class="all-posts">
-<div class="post"> 
+<div class="post">
 <div class="user-info">
-    <img src="/media/post1.jpg"
+    <img src=/media/1profilepicpinkbluemountainsmoon.jpg.jpg
  class="profile-pic">
-    <span class="username">DezertLvr
+    <span class="username">DrSeuss_quotes
 </span>
-</div><img src="/media/post1.jpg"
-" alt="Post 2" class="post-pic"><div class="caption">Chilling by the beach.
+</div><img src="/media/drseuss.jpg
+" alt="Post 2" class="post-pic"><div class="caption">
 </div>
     <div class="like-container">
         <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
-        <p class="like-count">10<p>
+        <p class="like-count">7790<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/11profpicstarbucks.jpg
+ class="profile-pic">
+    <span class="username">CoffeeeeFan
+</span>
+</div><img src="/media/sbuxcoffee.jpg
+" alt="Post 2" class="post-pic"><div class="caption">Pic, of my sbux coffee. So yummy!
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">1494<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/3profiepiccitybuildings.jpg
+ class="profile-pic">
+    <span class="username">Architek
+</span>
+</div><img src="/media/blueprints.jpg
+" alt="Post 2" class="post-pic"><div class="caption">Me, designing my next big project.
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">9678<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/4profilepiccat.jpg
+ class="profile-pic">
+    <span class="username">FunnYcat_videosDaily
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/cat.mp4
+" type="video/mp4">
+        </video><div class="caption">More tommorow!!
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">3946<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/18profpicfrenchie.jpg
+ class="profile-pic">
+    <span class="username">Alexandra293
+</span>
+</div><img src="/media/post4.jpg
+" alt="Post 2" class="post-pic"><div class="caption">Soooo much love.
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">6041<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/greencar.jpg
+ class="profile-pic">
+    <span class="username">PunktSportsCarz
+</span>
+</div><img src="/media/post 5.jpg
+" alt="Post 2" class="post-pic"><div class="caption">Sexy pink sports car.
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">5257<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/23profpicmountains.jpg
+ class="profile-pic">
+    <span class="username">Explore_outdoors_2024
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post 6.mp4
+" type="video/mp4">
+        </video><div class="caption">
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">9370<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/7profilepicmusic.jpg.jpg
+ class="profile-pic">
+    <span class="username">music_is_life
+</span>
+</div><img src="/media/geeetar.jpg
+" alt="Post 2" class="post-pic"><div class="caption">One good thing about music, when it hits you, you feel no pain.
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">165<p>
     </div>
 </div>    </div> <!-- all-posts -->
 </body>
@@ -78,7 +173,7 @@
 <script>
 
 function like_count_element_from_parent(parent_container) {
-	const like_count_element = 
+	const like_count_element =
 		parent_container.getElementsByClassName("like-count")[0];
 	return like_count_element;
 }
@@ -96,15 +191,15 @@ function toggle_like(button) {
 	let is_liked = false;
 	for (let class_idx=0;
 		 class_idx < button.classList.length;
-		 ++class_idx) 	
+		 ++class_idx)
 	{
 		if (button.classList[class_idx] === "liked") {
 			is_liked = true;
 			break;
 		}
 	}
-	
-	const like_count_element = 
+
+	const like_count_element =
 		like_count_element_from_parent(button.parentElement);
 	let like_count = like_count_from_element(like_count_element);
 
