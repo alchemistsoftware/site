@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Posts</title>
+</head>
+
+<style>
+    body {
+        background-color: #DDDDDD;
+    }
+
+    video,img {
+        width: 100%;
+    }
+
+    .all-posts {
+        /* border: 1px solid red; */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .next_prev {
+        display: flex;
+        align-items: space-between;
+        gap: 20px;
+    }
+
+    .post {
+        border: 1px solid black;
+        width: 400px;
+    }
+
+    .liked {
+        background-color: red;
+    }
+
+    .not-liked {
+    }
+
+    .user-info {
+        /* border: 1px solid red; */
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .like-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .profile-pic {
+        /* border: 3px solid yellow; */
+        border-radius: 100%;
+        width: 35px;
+        height: 35px;
+    }
+</style>
+
+<body>
+    <div class="all-posts">
+<div class="post">
+<div class="user-info">
+    <img src=/media/1profilepicpinkbluemountainsmoon.jpg.jpg
+ class="profile-pic">
+    <span class="username">DrSeuss_quotes
+</span>
+</div><img src="/media/post1.jpg
+" alt="Post 2" class="post-pic"><div class="caption">----
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">3982<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/2profilepicoutlineofhead.jpg.jpg
+ class="profile-pic">
+    <span class="username">CoffeeeeFan
+</span>
+</div><img src="/media/post2.jpg
+" alt="Post 2" class="post-pic"><div class="caption">Pic, of my sbux coffee. So yummy!
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">7525<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/3profiepiccitybuildings.jpg
+ class="profile-pic">
+    <span class="username">Architek
+</span>
+</div><img src="/media/post3.jpg
+" alt="Post 2" class="post-pic"><div class="caption">Me, designing my next big project.
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">1636<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/4profilepiccat.jpg
+ class="profile-pic">
+    <span class="username">FunnYcat_videosDaily
+</span>
+</div><img src="/media/post4.jpg
+" alt="Post 2" class="post-pic"><div class="caption">More tommorow!!
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">9780<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/5profilepic.jpg
+ class="profile-pic">
+    <span class="username">Alexandra293
+</span>
+</div><img src="/media/post5.jpg
+" alt="Post 2" class="post-pic"><div class="caption">Soooo much love.
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">8335<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/6profilepicfordescapecar.jpg
+ class="profile-pic">
+    <span class="username">PunktSportsCarz
+</span>
+</div><img src="/media/post6.jpg
+" alt="Post 2" class="post-pic"><div class="caption">Sexy pink sports car.
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">6101<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/7profilepic.jpg
+ class="profile-pic">
+    <span class="username">Explore_outdoors_2024
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post7.mp4
+" type="video/mp4">
+        </video><div class="caption">---
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">1418<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/8profilepic.jpg
+ class="profile-pic">
+    <span class="username">Explore_outdoors_2024
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post8.mp4
+" type="video/mp4">
+        </video><div class="caption">---
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">1188<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/8profilepic.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post8.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">7779<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/9profilepicsunset.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post9.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">2448<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/10profilepicdolphin.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><img src="/media/post10.jpg
+" alt="Post 2" class="post-pic"><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">5680<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/11profpicstarbucks.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><img src="/media/post11.jpg
+" alt="Post 2" class="post-pic"><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">2432<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/12profpicnikeshoes.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post12.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">7281<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/13profpictrackandfield.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><img src="/media/post13.jpg
+" alt="Post 2" class="post-pic"><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">2762<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/14profpicsoccerball.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post14.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">9122<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/15profilepicfishingrods.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post15.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">6526<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/16profpic.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post16.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">5236<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/17profpicgermanshepdog.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post17.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">5835<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/18profpicfrenchie.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post18.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">5252<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/19profpicseabunnies.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><img src="/media/post20shouldgoherebutitdoesntexist
+" alt="Post 2" class="post-pic"><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">1469<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/20profpicowls.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post20.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">7838<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/21profpicgreenleaf.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post21.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">5049<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/22profpicuoiadmin.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post22.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">8257<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/23profpicmountains.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post23.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">3264<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/24profpic.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post24.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">8248<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=profilepic25willalsogorighthere
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><img src="post25willgorighthere
+" alt="Post 2" class="post-pic"><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">5680<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/26profpic.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post26.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">6336<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/27profpic.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post27.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">3271<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/1profilepicpinkbluemountainsmoon.jpg
+ class="profile-pic">
+    <span class="username">ADD USERNAME
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post28.mp4
+" type="video/mp4">
+        </video><div class="caption">ADD DESC
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">4854<p>
+    </div>
+</div><div class="post">
+<div class="user-info">
+    <img src=/media/2profilepicoutlineofhead.jpg.jpg
+ class="profile-pic">
+    <span class="username">CoffeeeeFan
+</span>
+</div><video loop autoplay muted>
+            <source src="/media/post29.mp4
+" type="video/mp4">
+        </video><div class="caption">Pic, of my sbux coffee. So yummy!
+</div>
+    <div class="like-container">
+        <button class="like-btn not-liked" onclick="toggle_like(this)">Like</button>
+        <p class="like-count">4993<p>
+    </div>
+</div><div class="next_prev"><a href="/social_media_posts1.html">next</a></div>    </div> <!-- all-posts -->
+</body>
+
+<script>
+
+function like_count_element_from_parent(parent_container) {
+	const like_count_element =
+		parent_container.getElementsByClassName("like-count")[0];
+	return like_count_element;
+}
+
+function like_count_from_element(like_count_element) {
+	const like_count = Number(like_count_element.innerHTML);
+	return like_count;
+}
+
+function set_like_count(like_count_element, count) {
+	like_count_element.innerHTML = String(count);
+}
+
+function toggle_like(button) {
+	let is_liked = false;
+	for (let class_idx=0;
+		 class_idx < button.classList.length;
+		 ++class_idx)
+	{
+		if (button.classList[class_idx] === "liked") {
+			is_liked = true;
+			break;
+		}
+	}
+
+	const like_count_element =
+		like_count_element_from_parent(button.parentElement);
+	let like_count = like_count_from_element(like_count_element);
+
+	if (is_liked) {
+		button.classList.remove("liked");
+		button.classList.add("not-liked");
+		like_count -= 1;
+	} else {
+		button.classList.remove("not-liked");
+		button.classList.add("liked");
+		like_count += 1 ;
+	}
+	set_like_count(like_count_element, like_count);
+}
+</script>
+
+
+</html>
