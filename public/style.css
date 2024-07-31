@@ -38,6 +38,15 @@ ul,p,h1 {
     margin: 1%;
 }
 
+h3 {
+	margin: 1% 0% 1% 0%;
+}
+
+hr {
+	margin: 1% 0% 1% 0%;
+}
+
+
 #canvas-container {
     text-align: center;
 }

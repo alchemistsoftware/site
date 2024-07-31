@@ -1,12 +1,13 @@
 const std = @import("std");
 
+const public_path = "public";
 const pages_path = "public/pages";
 const templates_path = "templates";
 const template_buffer_size = 1024 * 8;
 
 const splash =
     \\================================
-    \\* Static Site Generator v0.0.2 *
+    \\* Static Site Generator v0.0.3 *
     \\================================
     \\
 ;
@@ -17,6 +18,7 @@ const raw_head_html =
     \\    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     \\    <meta name="description" content="">
     \\    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+	\\    <meta http-equiv="Pragma" content="no-cache">
     \\    <title>Alchemist Software</title>
     \\    <link rel="icon" href="./favicon.ico" type="image/x-icon">
     \\    <link rel="stylesheet" href="/style.css">
@@ -31,6 +33,7 @@ const raw_navbar_html =
     \\        <a href="/index.html">Home</a>
     \\        <a href="/pages/resume.html">Resume</a>
     \\        <a href="/pages/projects.html">Projects</a>
+    \\        <a href="/pages/posts.html">Posts</a>
     \\        <a href="https://github.com/cabarger">Github</a>
     \\        <a href="https://twitter.com/calebbarger20">@calebbarger20</a>
     \\    </nav>
@@ -54,15 +57,38 @@ pub fn main() !void {
 
     try stdout.writeAll(splash);
 
-    var templates_d = try std.fs.cwd().openIterableDir(templates_path, .{});
+    var templates_d = try std.fs.cwd().openDir(templates_path, .{.iterate = true});
     defer templates_d.close();
 
     try stdout.print("Nuking {s}...\n", .{pages_path});
     try std.fs.cwd().deleteTree(pages_path);
     var pages_d = try std.fs.cwd().makeOpenPath(pages_path, .{});
     defer pages_d.close();
+	
+	//
+	// Gen index.html 
+	// FIXME(caleb): Basically the same as templates page gen
+	//
 
-    var template_byte_buffer = try arena.alloc(u8, template_buffer_size);
+	var public_d = try std.fs.cwd().openDir(public_path, .{});
+	const index_f = try public_d.createFile("index.html", .{});
+	defer index_f.close();
+    const index_writer = index_f.writer();
+    try index_writer.writeAll("<!DOCTYPE html>\n");
+    try index_writer.writeAll("<html lang=\"en\">\n");
+    try index_writer.writeAll(raw_head_html);
+    try index_writer.writeAll("<body>\n");
+    try index_writer.writeAll(raw_navbar_html);
+	try index_writer.writeAll("<div id=\"canvas-container\"><canvas id=\"canvas\" width=\"500em\" height=\"600em\"></canvas></div>");
+    try index_writer.writeAll("<h2 class=\"sub-header\">Caleb activity</h2>");
+	try index_writer.writeAll("<div id=\"activity\"></div>");
+    try index_writer.writeAll(raw_copyright_html);
+    try index_writer.writeAll("</body>\n");
+    try index_writer.writeAll("</html>\n");
+
+	//////////////////////////////
+
+    const template_byte_buffer = try arena.alloc(u8, template_buffer_size);
 
     var template_d_walker = try templates_d.walk(arena);
     while (try template_d_walker.next()) |walk_entry| {
@@ -73,7 +99,7 @@ pub fn main() !void {
             },
             .file => {
                 try stdout.print("Writing {s}/{s}...\n", .{ pages_path, walk_entry.path });
-                const template_bytes = try templates_d.dir.readFile(walk_entry.path, template_byte_buffer);
+                const template_bytes = try templates_d.readFile(walk_entry.path, template_byte_buffer);
                 const page_f = try pages_d.createFile(walk_entry.path, .{});
                 defer page_f.close();
                 const page_writer = page_f.writer();
