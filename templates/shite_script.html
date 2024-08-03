@@ -37,7 +37,7 @@ getGithubEvents().then(events => {
 });
 
 ///////////////////////////////
-//~ cabarger: Tetris 
+//~ cabarger: My shite tetris code
 
 const ROWS = 20;
 const COLS = 10;
@@ -272,7 +272,6 @@ function initTetris() {
     loadPieceBuffer(scratch_piece_buffer, 
         next_up_piece_buffer, randomInt(Tetronimo.count), randomInt(4));
 
-    // Setup control handler
     window.addEventListener("keydown", e => {
         switch(e.code) {
             case "KeyA":

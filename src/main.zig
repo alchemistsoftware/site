@@ -3,11 +3,11 @@ const std = @import("std");
 const public_path = "public";
 const pages_path = "public/pages";
 const templates_path = "templates";
-const template_buffer_size = 1024 * 8;
+const template_buffer_size = 1024 * 20;
 
 const splash =
     \\================================
-    \\* Static Site Generator v0.0.3 *
+    \\* Static Site Generator v0.0.4 *
     \\================================
     \\
 ;
@@ -19,7 +19,7 @@ const raw_head_html =
     \\    <meta name="description" content="">
     \\    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 	\\    <meta http-equiv="Pragma" content="no-cache">
-    \\    <title>Alchemist Software</title>
+    \\    <title>calebarg.net</title>
     \\    <link rel="icon" href="./favicon.ico" type="image/x-icon">
     \\    <link rel="stylesheet" href="/style.css">
     \\</head>
@@ -28,7 +28,7 @@ const raw_head_html =
 
 const raw_navbar_html =
     \\<div class="right-left-margin-container">
-    \\    <h1 class="fancy-header">Alchemist Software</h1>
+ //   \\    <h1 class="fancy-header">calebarg.net</h1>
     \\    <nav class="navbar">
     \\        <a href="/index.html">Home</a>
     \\        <a href="/pages/resume.html">Resume</a>
@@ -46,6 +46,22 @@ const raw_copyright_html =
     \\
 ;
 
+fn write_top_html_chunk(page_writer: std.fs.File.Writer) !void
+{
+    try page_writer.writeAll("<!DOCTYPE html>\n");
+    try page_writer.writeAll("<html lang=\"en\">\n");
+    try page_writer.writeAll(raw_head_html);
+    try page_writer.writeAll("<body>\n");
+    try page_writer.writeAll(raw_navbar_html);
+} 
+
+fn write_bottom_html_chunk(page_writer: std.fs.File.Writer) !void
+{
+    //try page_writer.writeAll(raw_copyright_html);
+    try page_writer.writeAll("</body>\n");
+    try page_writer.writeAll("</html>\n");   
+} 
+
 pub fn main() !void {
     var arena_instance = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const arena = arena_instance.allocator();
@@ -54,41 +70,37 @@ pub fn main() !void {
     const stdout_f = std.io.getStdOut().writer();
     var bw = std.io.bufferedWriter(stdout_f);
     const stdout = bw.writer();
-
-    try stdout.writeAll(splash);
+	
+    try stdout.writeAll("\n" ++ splash);
 
     var templates_d = try std.fs.cwd().openDir(templates_path, .{.iterate = true});
     defer templates_d.close();
 
-    try stdout.print("Nuking {s}...\n", .{pages_path});
+    try stdout.print("Removing {s}...\n", .{pages_path});
     try std.fs.cwd().deleteTree(pages_path);
     var pages_d = try std.fs.cwd().makeOpenPath(pages_path, .{});
     defer pages_d.close();
-	
-	//
-	// Gen index.html 
-	// FIXME(caleb): Basically the same as templates page gen
-	//
-
-	var public_d = try std.fs.cwd().openDir(public_path, .{});
-	const index_f = try public_d.createFile("index.html", .{});
-	defer index_f.close();
-    const index_writer = index_f.writer();
-    try index_writer.writeAll("<!DOCTYPE html>\n");
-    try index_writer.writeAll("<html lang=\"en\">\n");
-    try index_writer.writeAll(raw_head_html);
-    try index_writer.writeAll("<body>\n");
-    try index_writer.writeAll(raw_navbar_html);
-	try index_writer.writeAll("<div id=\"canvas-container\"><canvas id=\"canvas\" width=\"500em\" height=\"600em\"></canvas></div>");
-    try index_writer.writeAll("<h2 class=\"sub-header\">Caleb activity</h2>");
-	try index_writer.writeAll("<div id=\"activity\"></div>");
-    try index_writer.writeAll(raw_copyright_html);
-    try index_writer.writeAll("</body>\n");
-    try index_writer.writeAll("</html>\n");
-
-	//////////////////////////////
 
     const template_byte_buffer = try arena.alloc(u8, template_buffer_size);
+	
+	// Gen index.html 
+	{
+		var public_d = try std.fs.cwd().openDir(public_path, .{});
+		const index_f = try public_d.createFile("index.html", .{});
+		defer index_f.close();
+    	const index_writer = index_f.writer();
+		
+		try write_top_html_chunk(index_writer);
+
+		try index_writer.writeAll("<div id=\"canvas-container\"><canvas id=\"canvas\" width=\"500em\" height=\"600em\"></canvas></div>");
+    	try index_writer.writeAll("<h2 class=\"sub-header\">Caleb activity</h2>");
+		try index_writer.writeAll("<div id=\"activity\"></div>");
+
+        const template_bytes = try templates_d.readFile("shite_script.html", template_byte_buffer);
+		try index_writer.writeAll(template_bytes);
+
+		try write_bottom_html_chunk(index_writer);
+	}
 
     var template_d_walker = try templates_d.walk(arena);
     while (try template_d_walker.next()) |walk_entry| {
@@ -103,17 +115,12 @@ pub fn main() !void {
                 const page_f = try pages_d.createFile(walk_entry.path, .{});
                 defer page_f.close();
                 const page_writer = page_f.writer();
-                try page_writer.writeAll("<!DOCTYPE html>\n");
-                try page_writer.writeAll("<html lang=\"en\">\n");
-                try page_writer.writeAll(raw_head_html);
-                try page_writer.writeAll("<body>\n");
-                try page_writer.writeAll(raw_navbar_html);
+
+				try write_top_html_chunk(page_writer);
                 try page_writer.writeAll("<div class=\"template-container\">");
                 try page_writer.writeAll(template_bytes);
                 try page_writer.writeAll("</div>");
-                try page_writer.writeAll(raw_copyright_html);
-                try page_writer.writeAll("</body>\n");
-                try page_writer.writeAll("</html>\n");
+				try write_bottom_html_chunk(page_writer);
             },
             else => continue,
         }
