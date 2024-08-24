@@ -5,7 +5,7 @@
     --link_blue: #61afef;
     --code_green: #98c379;
 }
- 
+
 @font-face {
     font-family: "ComicMono";
     src: url("./assets/fonts/ComicMono.ttf");
@@ -31,11 +31,13 @@ body {
 }
 
 li,p {
-    margin-top: 0.5em;
+   margin-top: 0.6em;
+   margin-left: 1em;
+   line-height: 1.5em;
 }
 
-ul,p,h1 {
-    margin: 1%;
+ul,h1 {
+   margin: 1%;
 }
 
 h3 {
@@ -130,9 +132,6 @@ hr {
     margin: 1em 0em 1em 0em;
 }
 
-img {
-    width: 100%;
-}
 a {
     color: var(--link_blue);
 }
