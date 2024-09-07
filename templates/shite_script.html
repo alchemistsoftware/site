@@ -1,10 +1,10 @@
 <script>
 ///////////////////////////////
-//~ cabarger: Fetch github activity 
+//~ calebarg: Fetch github activity 
 
 async function getGithubEvents() {
     let promise = new Promise((resolve) => {
-        fetch(`https://api.github.com/users/cabarger/events/public`)
+        fetch(`https://api.github.com/users/calebarg/events/public`)
             .then((Response) => {
                 Response.text()
                 .then((response_json) => {
@@ -37,7 +37,7 @@ getGithubEvents().then(events => {
 });
 
 ///////////////////////////////
-//~ cabarger: My shite tetris code
+//~ calebarg: My shite tetris code
 
 const ROWS = 20;
 const COLS = 10;

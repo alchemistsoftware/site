@@ -34,7 +34,7 @@ const raw_navbar_html =
     \\        <a href="/pages/resume.html">Resume</a>
     \\        <a href="/pages/projects.html">Projects</a>
     \\        <a href="/pages/posts.html">Posts</a>
-    \\        <a href="https://github.com/cabarger">Github</a>
+    \\        <a href="https://github.com/calebarg">Github</a>
     \\        <a href="https://twitter.com/calebbarger20">@calebbarger20</a>
     \\    </nav>
     \\</div>
