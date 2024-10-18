@@ -78,7 +78,9 @@ hr {
 }
 
 .template-container{
-    margin: 1em;
+    margin-top: 2%;
+    margin-left: 22%;
+    margin-right: 22%;
     flex: 1;
     overflow: auto;
 }
