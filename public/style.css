@@ -78,9 +78,16 @@ hr {
 }
 
 .template-container{
-    margin-top: 2%;
-    margin-left: 22%;
-    margin-right: 22%;
+    @media only screen and (min-width: 900px) {
+        margin-top: 2%;
+        margin-left: 22%;
+        margin-right: 22%;
+    }
+    @media only screen and (max-width: 900px) {
+        margin-top: 1em;
+        margin-left: 1em;
+        margin-right: 1em;
+    }
     flex: 1;
     overflow: auto;
 }
