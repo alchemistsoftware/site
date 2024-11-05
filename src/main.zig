@@ -1,13 +1,12 @@
 const std = @import("std");
 
 const public_path = "public";
-const pages_path = "public/pages";
 const templates_path = "templates";
 const template_buffer_size = 1024 * 20;
 
 const splash =
     \\================================
-    \\* Static Site Generator v0.0.5 *
+    \\* Static Site Generator v0.0.6 *
     \\================================
     \\
 ;
@@ -27,23 +26,15 @@ const raw_head_html =
 ;
 
 const raw_navbar_html =
-    \\<div class="right-left-margin-container">
-    //   \\    <h1 class="fancy-header">calebarg.net</h1>
     \\    <nav class="navbar">
     \\        <a href="/index.html">Home</a>
-    \\        <a href="/pages/resume.html">Resume</a>
-    \\        <a href="/pages/projects.html">Projects</a>
-    \\        <a href="/pages/posts.html">Posts</a>
+    \\        <a href="/projects.html">Projects</a>
+    \\        <a href="/posts.html">Posts</a>
     \\        <a href="https://github.com/calebarg">Github</a>
     \\        <a href="https://twitter.com/calebbarger20">@calebbarger20</a>
+    \\        <a href="/resume.html">Resume</a>
+    \\        <a href="/tetris.html">Tetris</a>
     \\    </nav>
-    \\</div>
-    \\
-;
-
-const raw_copyright_html =
-    \\<div id="copyright-container"><p>Copyright Alchemist Software LLC 2023-2024</p></div>
-    \\
 ;
 
 fn write_top_html_chunk(page_writer: std.fs.File.Writer) !void {
@@ -55,7 +46,6 @@ fn write_top_html_chunk(page_writer: std.fs.File.Writer) !void {
 }
 
 fn write_bottom_html_chunk(page_writer: std.fs.File.Writer) !void {
-    //try page_writer.writeAll(raw_copyright_html);
     try page_writer.writeAll("</body>\n");
     try page_writer.writeAll("</html>\n");
 }
@@ -74,37 +64,17 @@ pub fn main() !void {
     var templates_d = try std.fs.cwd().openDir(templates_path, .{ .iterate = true });
     defer templates_d.close();
 
-    try stdout.print("Removing {s}...\n", .{pages_path});
-    try std.fs.cwd().deleteTree(pages_path);
-    var pages_d = try std.fs.cwd().makeOpenPath(pages_path, .{});
-    defer pages_d.close();
+    var public_d = try std.fs.cwd().openDir(public_path, .{ .iterate = true });
+    defer public_d.close();
+
+    var posts_d = try templates_d.openDir("./posts", .{.iterate = true});
+    defer posts_d.close();
 
     const template_byte_buffer = try arena.alloc(u8, template_buffer_size);
 
-    // Gen index.html
-    {
-        var public_d = try std.fs.cwd().openDir(public_path, .{});
-        const index_f = try public_d.createFile("index.html", .{});
-        defer index_f.close();
-        const index_writer = index_f.writer();
-
-        try write_top_html_chunk(index_writer);
-
-        try index_writer.writeAll("<div id=\"canvas-container\"><canvas id=\"canvas\" width=\"500em\" height=\"600em\"></canvas></div>");
-        try index_writer.writeAll("<h2 class=\"sub-header\">Caleb activity</h2>");
-        try index_writer.writeAll("<div id=\"activity\"></div>");
-
-        const template_bytes = try templates_d.readFile("shite_script.html", template_byte_buffer);
-        try index_writer.writeAll(template_bytes);
-
-        try write_bottom_html_chunk(index_writer);
-    }
-
     // Gen posts.html
     {
-        var posts_d = try templates_d.openDir("./posts", .{.iterate = true});
-        defer posts_d.close();
-        const posts_f = try pages_d.createFile("posts.html", .{});
+        const posts_f = try public_d.createFile("posts.html", .{});
         defer posts_f.close();
 
         const posts_writer = posts_f.writer();
@@ -115,7 +85,7 @@ pub fn main() !void {
         while (try posts_d_walker.next()) |walk_entry| {
             switch (walk_entry.kind) {
                 .file => {
-                    try posts_writer.writeAll("<li><a href=\"/pages/posts/");
+                    try posts_writer.writeAll("<li><a href=\"/posts/");
                     try posts_writer.writeAll(walk_entry.basename);
                     try posts_writer.writeAll("\">");
                     try posts_writer.writeAll(std.fs.path.stem(walk_entry.basename));
@@ -128,17 +98,75 @@ pub fn main() !void {
         try write_bottom_html_chunk(posts_writer);
     }
 
+    // Gen index.html - Show the contents of the latest post
+    {
+        const index_f = try public_d.createFile("index.html", .{});
+        defer index_f.close();
+        const index_writer = index_f.writer();
+
+        try write_top_html_chunk(index_writer);
+
+        try index_writer.writeAll("<div class=\"template-container\">");
+
+        try index_writer.writeAll("<h3>[About me]</h3>");
+        try index_writer.writeAll("<p>Handmade software!</p>");
+
+        try index_writer.writeAll("<h3>[Latest post]</h3>");
+
+        var posts_d_walker = try posts_d.walk(arena);
+        var latest_post_path: ?[]const u8 = null; 
+        var latest_year: u16 = 0;
+        var latest_month: u8 = 0;
+        var latest_day: u8 = 0;
+        while (try posts_d_walker.next()) |walk_entry| {
+            switch (walk_entry.kind) {
+                .file => {
+                    const basename_no_ext = std.fs.path.stem(walk_entry.basename);
+                    var iter = std.mem.splitSequence(u8, basename_no_ext, "-");
+                    _ = iter.next() orelse unreachable;
+                    const year = try std.fmt.parseInt(u16, iter.next() orelse unreachable, 10);
+                    const month = try std.fmt.parseInt(u8, iter.next() orelse unreachable, 10);
+                    const day = try std.fmt.parseInt(u8, iter.next() orelse unreachable, 10);
+                    
+                    var is_latest_post = false;
+                    if (year > latest_year) {
+                        is_latest_post = true;
+                    }
+                    else if (month > latest_month) {
+                        is_latest_post = true;
+                    }  
+                    else if (day > latest_day) {
+                        is_latest_post = true;
+                    }
+                    if (is_latest_post) {
+                        latest_year = year;
+                        latest_month = month;
+                        latest_day  = day;
+                        latest_post_path = walk_entry.path;
+                    }
+                },
+                else => continue,
+            }
+        }
+        const latest_post_contents = try posts_d.readFile(latest_post_path orelse unreachable, template_byte_buffer);
+        try index_writer.writeAll(latest_post_contents);
+
+        try index_writer.writeAll("</div>"); // Template container closing div
+
+        try write_bottom_html_chunk(index_writer);
+    }
+
     var template_d_walker = try templates_d.walk(arena);
     while (try template_d_walker.next()) |walk_entry| {
         switch (walk_entry.kind) {
             .directory => {
-                try stdout.print("Making path {s}/{s}...\n", .{ pages_path, walk_entry.path });
-                try pages_d.makePath(walk_entry.path);
+                try stdout.print("Making path {s}/{s}...\n", .{ public_path, walk_entry.path });
+                try public_d.makePath(walk_entry.path);
             },
             .file => {
-                try stdout.print("Writing {s}/{s}...\n", .{ pages_path, walk_entry.path });
+                try stdout.print("Writing {s}/{s}...\n", .{ public_path, walk_entry.path });
                 const template_bytes = try templates_d.readFile(walk_entry.path, template_byte_buffer);
-                const page_f = try pages_d.createFile(walk_entry.path, .{});
+                const page_f = try public_d.createFile(walk_entry.path, .{});
                 defer page_f.close();
                 const page_writer = page_f.writer();
 

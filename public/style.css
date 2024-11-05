@@ -1,6 +1,7 @@
 :root {
     --soft_red: #e06c75;
     --soft_black: #151413;
+    --soft_gray: #191817;
     --soft_white: #BBBBBB;
     --link_blue: #61afef;
     --code_green: #98c379;
@@ -25,7 +26,7 @@ body {
     font-family: "ComicMono";
     color: var(--soft_white);
     min-height: 100vh;
-    font-size: medium;
+    font-size: small;
     display: flex;
     flex-flow: column;
 }
@@ -133,8 +134,14 @@ hr {
 }
 
 .navbar{
-    text-align: center;
-	margin-top: 0.5em;
+  background: var(--soft_gray);
+  display: flex;
+  justify-content: flex-start;
+}
+
+.navbar a {
+   margin-top: 0.2em;
+   margin-left: 0.4em;
 }
 
 .bleah {
@@ -144,3 +151,4 @@ hr {
 a {
     color: var(--link_blue);
 }
+
