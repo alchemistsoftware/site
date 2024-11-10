@@ -22,7 +22,8 @@
 }
 
 body {
-    background-color: var(--soft_black);
+    background-color: var(--soft_gray);
+/*   background: linear-gradient(0deg, var(--soft_white) 40%, var(--soft_black) 40%); */
     font-family: "ComicMono";
     color: var(--soft_white);
     min-height: 100vh;
@@ -94,7 +95,6 @@ hr {
 }
 
 .right-left-margin-container{
-    background-color: var(--soft_black);
     margin-left: 10%;
     margin-right: 10%;
 }
@@ -134,14 +134,32 @@ hr {
 }
 
 .navbar{
-  background: var(--soft_gray);
   display: flex;
   justify-content: flex-start;
+  flex-flow: row wrap;
+ /*background: var(--soft_gray);*/
+  width: 100%;
 }
 
 .navbar a {
    margin-top: 0.2em;
    margin-left: 0.4em;
+}
+
+#navbar-container {
+  display: flex;
+  width: 100%;
+  flex-flow: row nowrap;
+  justify-content: flex-start; 
+  align-items: flex-start;
+}
+
+#profile {
+  max-width: 5.5em;
+  align-self: flex-end;
+  border-bottom: 1px solid white;
+  border-left: 1px solid white;
+  margin-left: auto;
 }
 
 .bleah {

@@ -42,7 +42,10 @@ fn write_top_html_chunk(page_writer: std.fs.File.Writer) !void {
     try page_writer.writeAll("<html lang=\"en\">\n");
     try page_writer.writeAll(raw_head_html);
     try page_writer.writeAll("<body>\n");
+    try page_writer.writeAll("<div id=\"navbar-container\">");
     try page_writer.writeAll(raw_navbar_html);
+    try page_writer.writeAll("<img id=\"profile\" src=\"/assets/profile.jpg\">");
+    try page_writer.writeAll("</div>");
 }
 
 fn write_bottom_html_chunk(page_writer: std.fs.File.Writer) !void {
@@ -110,6 +113,7 @@ pub fn main() !void {
 
         try index_writer.writeAll("<h3>[About me]</h3>");
         try index_writer.writeAll("<p>Handmade software!</p>");
+
 
         try index_writer.writeAll("<h3>[Latest post]</h3>");
 
