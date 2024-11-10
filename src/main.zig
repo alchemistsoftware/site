@@ -118,10 +118,8 @@ pub fn main() !void {
         try index_writer.writeAll("<h3>[Latest post]</h3>");
 
         var posts_d_walker = try posts_d.walk(arena);
-        var latest_post_path: ?[]const u8 = null; 
-        var latest_year: u16 = 0;
-        var latest_month: u8 = 0;
-        var latest_day: u8 = 0;
+        var latest_post_path: ?[]const u8 = null;
+        var latest = @Vector(3, u16){0, 0, 0};
         while (try posts_d_walker.next()) |walk_entry| {
             switch (walk_entry.kind) {
                 .file => {
@@ -129,29 +127,38 @@ pub fn main() !void {
                     var iter = std.mem.splitSequence(u8, basename_no_ext, "-");
                     _ = iter.next() orelse unreachable;
                     const year = try std.fmt.parseInt(u16, iter.next() orelse unreachable, 10);
-                    const month = try std.fmt.parseInt(u8, iter.next() orelse unreachable, 10);
-                    const day = try std.fmt.parseInt(u8, iter.next() orelse unreachable, 10);
-                    
+                    const month = try std.fmt.parseInt(u16, iter.next() orelse unreachable, 10);
+                    const day = try std.fmt.parseInt(u16, iter.next() orelse unreachable, 10);
+
                     var is_latest_post = false;
-                    if (year > latest_year) {
+                    const date = @Vector(3, u16){year, month, day};
+                    const date_gt = date > latest;
+                    const date_eq = date == latest;
+
+                    if (date_gt[0]) { // Curr year > latest year
                         is_latest_post = true;
                     }
-                    else if (month > latest_month) {
-                        is_latest_post = true;
-                    }  
-                    else if (day > latest_day) {
-                        is_latest_post = true;
+                    else if (date_eq[0]) { // Curr year == latest year
+                        if (date_gt[1]) {  // Curr month > latest month
+                            is_latest_post = true;
+                        }
+                        else if (date_eq[1]) { // Curr month == latest month
+                            if (date_gt[2]) { // Curr day > latest day
+                                is_latest_post = true;
+                            }
+                        }
                     }
+
                     if (is_latest_post) {
-                        latest_year = year;
-                        latest_month = month;
-                        latest_day  = day;
-                        latest_post_path = walk_entry.path;
+                        latest = date;
+                        latest_post_path = try arena.dupe(u8, walk_entry.path);
                     }
                 },
                 else => continue,
             }
         }
+
+
         const latest_post_contents = try posts_d.readFile(latest_post_path orelse unreachable, template_byte_buffer);
         try index_writer.writeAll(latest_post_contents);
 
