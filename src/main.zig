@@ -112,8 +112,8 @@ pub fn main() !void {
         try index_writer.writeAll("<div class=\"template-container\">");
 
         try index_writer.writeAll("<h3>[About me]</h3>");
-        try index_writer.writeAll("<p>Handmade software!</p>");
-
+        try index_writer.writeAll("<p><a href=\"https://handmade.network/\">Handmade software!</a></p>");
+        try index_writer.writeAll("<p>Working on a game where a ravenous cup of coffee trys to eat you.</p>");
 
         try index_writer.writeAll("<h3>[Latest post]</h3>");
 

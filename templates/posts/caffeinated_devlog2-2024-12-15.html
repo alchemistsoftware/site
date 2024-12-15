@@ -1,0 +1,42 @@
+<h1>Caffeinated Devlog #2</h1>
+
+<h3>Added:</h3>
+<ul>
+  <li>Audio support!</li>
+  <li>Upgraded software renderer</li>
+  <li>Basic camera system</li>
+  <li>Other misc improvements</li>
+</ul>
+
+<h3>Audio</h3>
+<p>It turns out sound programming is kinda hard if you haven't worked with it before</p>
+<p>(There are still tons of bugs that I need to work out!)</p>
+
+<p>The new sound system is built with <a href="https://www.alsa-project.org/wiki/Main_Page">ALSA</a></p>
+
+<p>Not synthesizing anything at the moment. I've written a basic WAV file loader to get the audio samples.</p>
+<p>This version of the sound system only supports 48000hz 2 channel 16 bit.</p>
+
+<p>My initial implementation works something like this: I can queue up audio to be played back (the sound data from WAV files). When its time to write audio samples (the game needs to fill the audio buffer with n samples each frame) I look at each queued sound item and bitwise OR its audio data into the sound buffer. Once all the samples in the queued up sound item have been exhaused it is removed from the queue.</p>
+
+<h3>Software renderer improvements</h3>
+
+<p>When I was playing around with bitmap scaling, I had some cruft lying around (non vectorized/SIMD code) related to that scaling. This was causing non optimized builds to run bellow 60fps. I went through and made that code SIMD and now I'm back up to a smooth 60</p>
+
+<p>The bitmap drawing routine also had some bugs with clipping so I went through and fixed that as well.</p>
+
+<h3>Basic camera system</h3>
+
+<p>Added matricies to my renderer. Scrapped together a simple view matrix which does transforms of world space positions (in pixels) to screen space positions (also in pixels). With that in place I did a simple screen transition.</p>
+
+<h3>Other misc improvements</h3>
+
+<p>Unified movement code paths -- Orignally I had sepearte movement code paths for both the player and caffie (the ravenous cup of coffee). Now they both use the same movement code</p>
+<p>Improved input handling -- My input code still sucks, but it sucks less now.</p>
+
+<video alt="A cup of coffee chasing a bottle of water" width="300" height="200" controls>
+   <source src="/media/caffeinated2.mp4" type="video/mp4">
+</video>
+
+<p>I'm still not sure where I'm going with this game. I think I want it to be scary?! I want to have an emphasis on story. So one thing thats clear is i'll need a nicer dilog system. IDK probably a text box or something in the bottom of the screen. This seems simple enough. As for the scaryness factor,  I need to make the game darker (i.e. lighting wise). Maybe you collect things? I'm not sure why your collecting things either. Pretty much all I have for certain is a cup of coffee that wants to murder you.</p>
+
