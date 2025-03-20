@@ -31,7 +31,8 @@ const raw_navbar_html =
     \\        <a href="/projects.html">Projects</a>
     \\        <a href="/posts.html">Posts</a>
     \\        <a href="https://github.com/calebarg">Github</a>
-    \\        <a href="https://twitter.com/calebbarger20">@calebbarger20</a>
+    \\        <a href="https://twitter.com/calebbarger20">X Profile</a>
+    \\        <a href="https://www.youtube.com/@calebarg02">Youtube Channel</a>
     \\        <a href="/resume.html">Resume</a>
     \\        <a href="/tetris.html">Tetris</a>
     \\    </nav>
@@ -112,8 +113,8 @@ pub fn main() !void {
         try index_writer.writeAll("<div class=\"template-container\">");
 
         try index_writer.writeAll("<h3>[About me]</h3>");
-        try index_writer.writeAll("<p><a href=\"https://handmade.network/\">Handmade software!</a></p>");
-        try index_writer.writeAll("<p>Working on a game where a ravenous cup of coffee trys to eat you.</p>");
+				try index_writer.writeAll("<p>Programming a TUI full time at my job.</p>");
+				try index_writer.writeAll("<p>Working on a game and engine where a cup of coffee trys to murder you.</p>");
 
         try index_writer.writeAll("<h3>[Latest post]</h3>");
 
